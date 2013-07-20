@@ -246,7 +246,7 @@ width:33%
 }
 
 #header.header-bar {
-background:#333 url(/images/header-bg.jpg);
+background: #f7f7f7;
 -moz-box-shadow:0 1px 1px rgba(0,0,0,0.05);
 -webkit-box-shadow:0 1px 1px rgba(0,0,0,0.05);
 box-shadow:0 1px 1px rgba(0,0,0,0.05);
@@ -254,19 +254,25 @@ border-bottom:1px solid #000;
 position:fixed;
 top:0;
 z-index:115;
-width:100%
+width:100%;
+color: #000;
 }
 
 #header.header-bar h1 {
 float:left;
 margin-bottom:0;
 font-size:26px;
-padding:5px 0
+padding:10px 0
 }
 
 #header.header-bar h1 a {
 background:none;
 padding:0
+}
+
+.header-container {
+	width: 98%;
+	margin: auto;
 }
 
 
@@ -290,13 +296,7 @@ line-height:29px
 }
 
 #search-box {
-padding-top:20px;
-position:fixed;
-top:61px;
 z-index:130;
-background:#eee;
-background:rgba(255,255,255,0.5);
-width:100%
 }
 
 #search-box.hide {
@@ -304,7 +304,6 @@ display:none
 }
 
 #search-box #dialog input[type=text] {
-width:844px;
 margin-right:2px
 }
 
@@ -373,13 +372,12 @@ border-right:1px solid #222;
 border-left:1px solid #555
 }
 
-nav#main-menu .main-text {
-font-size:14px;
-line-height:16px;
-color:#fff;
-text-shadow:0 1px 0 rgba(0,0,0,0.5);
--webkit-text-shadow:0 1px 0 rgba(0,0,0,0.5);
--moz-text-shadow:0 1px 0 rgba(0,0,0,0.5)
+nav#main-menu .main-text, nav#secondary-menu .main-text {
+	color: #333;
+	text-decoration: none;
+	font-size: 24px;
+	text-shadow: none;
+	border: none;
 }
 
 nav#main-menu .descriptor {
@@ -389,8 +387,6 @@ color:#ccc
 nav#secondary-menu {
 float:right;
 height:60px;
-border-right:1px solid #555;
-border-left:1px solid #222
 }
 
 nav#secondary-menu li {
@@ -400,14 +396,7 @@ line-height:34px
 nav#secondary-menu li a {
 display:inline-block;
 color:#fff;
-padding:18px 15px;
-font-size:12px;
-line-height:24px;
-border-right:1px solid #222;
-border-left:1px solid #555;
-text-shadow:0 1px 0 rgba(0,0,0,0.5);
--webkit-text-shadow:0 1px 0 rgba(0,0,0,0.5);
--moz-text-shadow:0 1px 0 rgba(0,0,0,0.5)
+padding:12px 15px;
 }
 
 nav#secondary-menu li a:hover {
@@ -972,10 +961,9 @@ zoom:1
 }
 
 #dialog {
-margin:0 auto 30px;
+margin:0 auto;
 text-align:left;
 padding:5px;
-background:#ddd;
 -webkit-border-radius:2px;
 -moz-border-radius:2px;
 border-radius:2px
@@ -1252,25 +1240,25 @@ padding:3px 15px
 .sidebar ul {
   list-style-type: none;
 }
- 
+
 .sidebar h3 {
   font: bold 12px Helvetica, Verdana, sans-serif;
 }
- 
+
 .sidebar li img {
   float: left;
   margin: 0 15px 0 0;
 }
- 
+
 .sidebar li p {
   font: 200 12px/1.5 Georgia, Times New Roman, serif;
 }
- 
+
 .sidebar li {
   padding: 4px;
   border-bottom: 2px solid #eee;
 }
- 
+
 .sidebar li:hover {
   background: #eee;
   cursor: pointer;
@@ -1286,8 +1274,8 @@ padding:3px 15px
 	}
 
 .rdio-play em{
-	width: 16px; 
-	height:16px; 	
+	width: 16px;
+	height:16px;
 	background-repeat:no-repeat;
 	background-size:contain;
 	background-position:center;
