@@ -16,6 +16,11 @@ body {
 	overflow-x: hidden;
 }
 
+.container-fluid {
+	padding-left: 0;
+	padding-right: 0;
+}
+
 table {
 border-collapse:collapse;
 border-spacing:0
@@ -249,12 +254,12 @@ width:33%
 }
 
 .logo {
-	background: url('/images/logo.png') no-repeat;
+	background: url('/images/logo-amp.png') no-repeat;
 	-webkit-background-size: 100% 100%;
 	background-size: 100% 100%;
 	display: block;
-	width: 205px;
-	height: 27px;
+	width: 197px;
+	height: 55px;
 	text-indent: -9999px;
 }
 
@@ -283,6 +288,7 @@ margin-left: -333.5px; /*667/2*/
 padding: 15px;
 color: #000;
 width: 697px;
+height: 50px;
 -webkit-transition: all 1s ease-in-out;
 -moz-transition: all 1s ease-in-out;
 -ms-transition: all 1s ease-in-out;
@@ -309,7 +315,7 @@ width: 667px;
 float:left;
 margin-right: 28px;
 font-size:26px;
-padding:10px 0
+padding:7px 0 0;
 }
 
 .results .logo-header {
