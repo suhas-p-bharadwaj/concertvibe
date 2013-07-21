@@ -282,7 +282,7 @@ left: 50%;
 margin-left: -333.5px; /*667/2*/
 padding: 15px;
 color: #000;
-min-width: 697px;
+width: 697px;
 -webkit-transition: all 1s ease-in-out;
 -moz-transition: all 1s ease-in-out;
 -ms-transition: all 1s ease-in-out;
@@ -300,13 +300,20 @@ left: 50px;
 top: 10px;
 margin-left: 0;
 margin-top: 0;
+padding: 2px 8px 3px;
+width: 667px;
+
 }
 
-#header.header-bar h1 {
+.logo-header {
 float:left;
 margin-right: 28px;
 font-size:26px;
 padding:10px 0
+}
+
+.results .logo-header {
+	margin-right: 12px;
 }
 
 .header-container {
@@ -318,12 +325,13 @@ padding:10px 0
  float: left;
 }
 
-#search-box.hide {
-display:none
+.results #dialog input[type=text] {
+	border-bottom: 0;
+	padding: 11px 59px 7px 6px;
 }
 
 #search-box #dialog input[type=text] {
-width: 400px;
+width: 378px;
 -webkit-transition: border-bottom .2s linear;
 -moz-transition: border-bottom .2s linear;
 -ms-transition: border-bottom .2s linear;
@@ -334,6 +342,10 @@ transition: border-bottom .2s linear;
 
 #search-box #dialog input[type=text]:focus {
 	border-bottom: 1px solid #3892E3;
+}
+
+.results #search-box #dialog input[type=text]:focus {
+	border-bottom: none;
 }
 
 @-webkit-keyframes pulse {
@@ -1043,7 +1055,7 @@ border:1px solid red
 float:left;
 background: transparent;
 color:#000;
-padding:8px 28px 8px 6px;
+padding:8px 59px 8px 6px;
 border: none;
 border-bottom:1px solid #ccc;
 width: 78%;
@@ -1069,6 +1081,10 @@ border: none;
 background: none;
 position: relative;
 z-index: 1;
+}
+
+.results #search-btn {
+	top: 2px;
 }
 
 #dialog button[type=submit]:hover {
