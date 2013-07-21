@@ -4,11 +4,12 @@ var map = L.mapbox.map('map', 'avantassel.map-6y8nsvv5').setView([current.lat,cu
 var markerLayer = L.mapbox.markerLayer(mapLayers).addTo(map);
 var eventList = [];
 var distance = 0;
-var rdio = {playback_token:'GBNR61g4_____2R2cHlzNHd5ZXg3Z2M0OXdoaDY3aHdrbnd3dy5jb25jZXJ0dmliZS5jb21utNIqY5tbhfBHUz5mcuVO'};
+var lastTrack ='';
 
 function clearLayer(layerName){
     mapLayers=[];
     $('.poi-list').empty();
+    $('.sidebar #content').empty();
     markerLayer.setGeoJSON({
         type: 'FeatureCollection',
         features: mapLayers
@@ -33,6 +34,7 @@ function JamBaseEvents(query,artistId){
         function(data) {
 
             if(typeof data.Events != 'undefined'){
+            	$('.sidebar #content').append('<h3>Upcoming Shows</h3>');
                 $.each(data.Events,function(){
                 	if(typeof this.Venue != 'undefined')
 	                    addPOI_JB(this);
@@ -53,6 +55,7 @@ function Setlists(query){
         function(data) {
 
             if(typeof data.setlists.setlist != 'undefined'){
+            	$('.sidebar #content').append('<h3>Past Shows</h3>');
                 $.each(data.setlists.setlist,function(){
                 	if(typeof this.venue != 'undefined')
 	                    addPOI_SL(this);
@@ -72,23 +75,45 @@ function GetSentiment(query,lat,lng){
 	    $.getJSON('/tools/alchemy.php',{name:query,lat:lat,lng:lng}, 
         function(data) {
             
+            /*
+<div class="leaflet-popup-content-wrapper">
+            <h3>Audience reaction</h3>
+              <div>
+                <img src="images/happy.svg" class="svg face-happy twitter-face" alt="They sucked.">
+                <a href="TWITTER_HANDLE" class="twitter-handle">@asshole</a href="TWITTER_HANDLE">
+                <p class="twitter-tweet">So good. So goooooood.</p>
+              </div>
+              <div>
+                <img src="images/neutral.svg" class="svg face-neutral twitter-face" alt="They sucked.">
+                <a href="TWITTER_HANDLE" class="twitter-handle">@mehIdontknow</a href="TWITTER_HANDLE">
+                <p class="twitter-tweet">Unimpressed. I must say.</p>
+              </div>
+              <div>
+                <img src="images/sad.svg" class="svg face-sad twitter-face" alt="They sucked.">
+                <a href="TWITTER_HANDLE" class="twitter-handle">@thiswasmyfirstshow</a href="TWITTER_HANDLE">
+                <p class="twitter-tweet">I fell asleep in the venue bathroom, woke up with a needle in me.</p>
+              </div>
+          </div>
+*/
+          
             console.log(data);
             
         },'jsonp');
 }
 
 function addPOI_JB(poi){
-
+	
+	var d = new Date(poi.Date);
+	poi.Date = d.getMonth()+'/'+d.getDate()+'/'+d.getFullYear();
+	
+	$('.sidebar #content').append('<div class="marker-place">'+poi.Date+' '+poi.Venue.City+', '+poi.Venue.State+'</div>');
+	
 	function getDesc(poi){
-	    var html='<p>';
-	    html += 'Sentiment: ';
-	    
-	    if(typeof poi.Venue.Address != 'undefined'){
-	        if(poi.Venue.Address)
-	            html+='<br/>'+poi.Venue.Address;
-	        html+='<br/>'+poi.Venue.City+', '+poi.Venue.State;
-	    }
-	    html += '</p>';
+		var html ='<div class="concert-meta">\
+            <div class="marker-date">'+poi.Date+'</div>\
+            <div class="marker-place">'+poi.Venue.City+', '+poi.Venue.State+'</div>\
+            <div class="marker-title">'+poi.Venue.Name+'</div>\
+          </div>';
 	    return html;
 	}
 	
@@ -104,10 +129,10 @@ function addPOI_JB(poi){
             coordinates: [parseFloat(poi.Venue.Longitude),parseFloat(poi.Venue.Latitude)]
         },
         properties: {
-            'title': poi.Venue.Name+' on '+poi.Date,
+            'title': '',
             'marker-color': '#C79926',
             'marker-symbol':'music',
-            'description': getDesc(poi)
+            'description':getDesc(poi)
         }
     });
 
@@ -115,30 +140,44 @@ function addPOI_JB(poi){
 }
 
 function addPOI_SL(poi){
-
+	
+	var d = new Date(poi['@eventDate'].substring(6, 10)+'-'+poi['@eventDate'].substring(3, 5)+'-'+poi['@eventDate'].substring(0, 2));
+	poi.Date = d.getMonth()+'/'+d.getDate()+'/'+d.getFullYear();
+	
+	$('.sidebar #content').append('<div class="marker-place">'+poi.Date+' '+poi.venue.city['@name']+', '+poi.venue.city['@stateCode']+'</div>');
+	
 	function getDesc(poi){
-	    var html ='<p>';
-	        html+='<br/>'+poi.venue.city['@name']+', '+poi.venue.city['@stateCode'];
-	    html += '</p>';
+		
+		var html ='<div class="concert-meta">\
+            <div class="marker-date">'+poi.Date+'</div>\
+            <div class="marker-place">'+poi.venue.city['@name']+', '+poi.venue.city['@stateCode']+'</div>\
+            <div class="marker-title">'+poi.venue['@name']+'</div>\
+          </div>';
+          
 	    var sets=0;
 	    if(typeof poi.sets.set != 'undefined'){
+	    	
+	    	html += '<div class="hide marker-description">\
+              <h3>Setlist</h3>';
+              
 		    $.each(poi.sets.set,function(){
-		    	html += '<ul>';		    	
+		    	html += '<ol>';
 		    	if(sets>=2)
-			    	html += '<div><b>Encore</b></div>';
+			    	html += '<h4>Encore</h4>';
 		    	else
-		    		html += '<div><b>'+this['@name']+'</b></div>';
+		    		html += '<h4>'+this['@name']+'</h4>';
 		    		
 			   $.each(this.song,function(){
 			   	  if(!this.cover)
- 			   	  	  html += '<li>'+this['@name']+' <a href="#" class="rdio-play" data-track="'+this['@name']+'"></a></li>'; 	
+ 			   	  	  html += '<li><a href="#" class="rdio-play">'+this['@name']+'</a></li>'; 	
 			   	  else
-					  html += '<li class="cover" data-artist="'+this.cover['@name']+'">'+this['@name']+' <b>*</b> <a href="#" class="rdio-play" data-track="'+this['@name']+'"></a></li>'; 
+					  html += '<li class="cover" data-artist="'+this.cover['@name']+'"><a href="#" class="rdio-play">'+this['@name']+' <b>*</b></a></li>'; 
 			   }); 
-			   html += '</ul>'; 
+			   html += '</ol>'; 
 			   sets++;
 		    });
-	    }
+			html += '</div>';
+	    }	    
 	    return html;
 	}
 	
@@ -154,10 +193,10 @@ function addPOI_SL(poi){
             coordinates: [parseFloat(poi.venue.city.coords['@long']),parseFloat(poi.venue.city.coords['@lat'])]
         },
         properties: {
-            'title': poi.venue['@name']+' on '+poi['@eventDate'],
+            'title': '',
             'marker-color': '#2554C7',
             'marker-symbol':'music',
-            'description': getDesc(poi)
+            'description':getDesc(poi)
         }
     });
 
@@ -228,6 +267,10 @@ jQuery('img.svg').each(function(){
 
 });
 
+function pausePlayer(){
+	R.player.pause();
+}
+
 $( document ).ready(function() {
 
     $('#search-btn').on('click',function() {
@@ -237,18 +280,40 @@ $( document ).ready(function() {
         }
     });
     
-    $('.rdio-play').on('click',function(){
-    	var track=$(this).data('track');
+    markerLayer.on('click',function(e,d){
+	    var content = $(e.layer._popup._content);
+	    
+	    $(content).find('.marker-description').removeClass('hide');
+	    $('.sidebar #content').empty().append($(content));
+	    
+	    return false;	    
+    });
+    		      
+    $('.sidebar #content').on('click','a.rdio-play',function(){
+    	if($(this).hasClass('playing')){
+	    	R.player.pause();
+	    	$('.sidebar #content a.rdio-play').removeClass('playing');
+	    	$('.sidebar #content').remove('div.player');		        
+	    	return;
+    	}    	
+    	
+    	var self=this;
     	R.ready(function() { // just in case the API isn't ready yet
               R.request({
 		        method: "search", 
 		        content: {
-		          artist: $('#q').val(), 
-		          name: track,
+		          query: $('#q').val()+' '+$(self).html(), 
 		          types: "Track"
 		        },
 		        success: function(response) {
-		          console.log(response.result.results);
+		        $('.sidebar #content').remove('div.player');		        
+		          if(lastTrack==response.result.results[0].key)
+		          	R.player.play();
+		          else
+			        R.player.play({source:response.result.results[0].key});
+		          lastTrack=response.result.results[0].key;		
+		          $(self).addClass('playing');          
+		          $(self).parent().prepend('<div class="player"></div>');
 		        },
 		        error: function(response) {
 		          console.log(response.message);

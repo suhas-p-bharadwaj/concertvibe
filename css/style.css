@@ -1315,6 +1315,14 @@ padding:3px 15px
   left: 10px;
 }
 
+.sidebar .player {
+	width: 40px;
+	height:40px;
+	background-repeat:no-repeat;
+	background-size:contain;
+	background-position:center;
+	background-image: url('/images/ani_equalizer_black.gif');
+}
 .sidebar li:hover {
   background: #eee;
   cursor: pointer;

@@ -16,10 +16,10 @@
   <!--[if lte IE 8]>
     <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.0/mapbox.ie.css' rel='stylesheet' >
   <![endif]-->
-  <script type="text/javascript" src="https://www.rdio.com/media/fresh/now/api-helper.js"></script>
-</head>
+    <script src="//www.rdio.com/api/api.js?client_id=ToUS9OYepTGDQ6fRIUJn7A"></script>
     <link href='httxp://api.tiles.mapbox.com/mapbox.js/v1.3.0/mapbox.ie.css' rel='stylesheet' >
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>  
+    <script src="/js/rdio-utils.js"></script>
  </head>
   <body>
     <div class="container-fluid">
@@ -46,69 +46,9 @@
         
         <!-- Sidebar -->
         <div class="sidebar">
-          <!-- HTML for FED formatting, CLEAR WHEN API IS WORKIN' -->
-          <div class="concert-meta leaflet-popup-content-wrapper">
-            <h3>When and where</h3>
-            <div class="marker-date">July 17th, 2013</div>
-            <div class="marker-place">Alpharetta, GA</div>
-            <div class="marker-title">Verizon Wireless Amphitheatre at Encore Park</div>
-          </div>
-          <div class="leaflet-popup-content-wrapper">
-            <h3>Audience reaction</h3>
-              <div>
-                <img src="images/happy.svg" class="svg face-happy twitter-face" alt="They sucked.">
-                <a href="TWITTER_HANDLE" class="twitter-handle">@asshole</a href="TWITTER_HANDLE">
-                <p class="twitter-tweet">So good. So goooooood.</p>
-              </div>
-              <div>
-                <img src="images/neutral.svg" class="svg face-neutral twitter-face" alt="They sucked.">
-                <a href="TWITTER_HANDLE" class="twitter-handle">@mehIdontknow</a href="TWITTER_HANDLE">
-                <p class="twitter-tweet">Unimpressed. I must say.</p>
-              </div>
-              <div>
-                <img src="images/sad.svg" class="svg face-sad twitter-face" alt="They sucked.">
-                <a href="TWITTER_HANDLE" class="twitter-handle">@thiswasmyfirstshow</a href="TWITTER_HANDLE">
-                <p class="twitter-tweet">I fell asleep in the venue bathroom, woke up with a needle in me.</p>
-              </div>
-          </div>
           
-          <div class="leaflet-popup-content-wrapper">
-            <div class="marker-description">
-              <h3>Setlist</h3>
-               <ol>
-                  <h4>Set One:</h4>
-                  <li>Kill Devil Falls <a class="rdio-play"></a></li>
-                  <li>Mound <a class="rdio-play"></a></li>
-                  <li>Bathtub Gin <a class="rdio-play"></a></li>
-                  <li>Army of One <a class="rdio-play"></a></li>
-                  <li>Rift <a class="rdio-play"></a></li>
-                  <li>Horn <a class="rdio-play"></a></li>
-                  <li>Possum <a class="rdio-play"></a></li>
-                  <li>Pebbles and Marbles <a class="rdio-play"></a></li>
-                  <li>Ocelot <a class="rdio-play"></a></li>
-                  <li>Cavern <a class="rdio-play"></a></li>
-                  <li>Run Like an Antelope <a class="rdio-play"></a></li>
-               </ol>
-               <ol>
-                  <h4>Set Two:</h4>
-                  <li>Rock and Roll <b>*</b> <a class="rdio-play"></a></li>
-                  <li>Heartbreaker <a class="rdio-play"></a></li>
-                  <li>Makisupa Policeman <a class="rdio-play"></a></li>
-                  <li>Chalk Dust Torture <a class="rdio-play"></a></li>
-                  <li>Wilson <a class="rdio-play"></a></li>
-                  <li>Tweezer <a class="rdio-play"></a></li>
-                  <li>Silent in the Morning <a class="rdio-play"></a></li>
-                  <li>Birds of a Feather <a class="rdio-play"></a></li>
-                  <li>Joy <a class="rdio-play"></a></li>
-                  <li>Harry Hood <a class="rdio-play"></a></li>
-                  <li>Character Zero <a class="rdio-play"></a></li>
-               </ol>
-               <ol>
-                  <div><b>Set Two:</b></div>
-                  <li>A Day in the Life <b>*</b> <a class="rdio-play"></a></li>
-                  <li>Tweezer Reprise <a class="rdio-play"></a></li>
-               </ol>
-            </div>
+          <div id="content">
+	          
           </div>
           
           <div class="leaflet-popup-content-wrapper">
@@ -121,28 +61,12 @@
       </div>
     </div>
 
-    <div id="rdio-api"></div>
-    
     <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
-
-    <script src="//www.rdio.com/api/api.js?client_id=ToUS9OYepTGDQ6fRIUJn7A"></script>
         
     <script src="/js/bootstrap.js"></script>
     <script src="/js/map.js"></script>
-  
-  </body>
-
-  </div>
-
-
-
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
-  <script src="https://raw.github.com/rdio/jquery.rdio.js/master/jquery.rdio.min.js" ></script>
-
-  <script src="/js/bootstrap.js"></script>
-  <script src="/js/map.js"></script>
 
 </body>
->>>>>>> 93a31407696dc69b8e9944441ced07eed822660f
+
 </html>
