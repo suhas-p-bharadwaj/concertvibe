@@ -21,9 +21,9 @@ function clearLayer(layerName){
 }
 
 function JamBaseSearch(query){
-	
+
 	$('#song-progress.progress .bar').css('width','20%');
-	
+
     $.getJSON('/tools/jambase.php',{artist:true,name:query},
         function(data) {
             if(data && typeof data.Artists != 'undefined' && data.Artists.length > 0){
@@ -56,7 +56,7 @@ function JamBaseEvents(query,artistId){
                     type: 'FeatureCollection',
                     features: mapLayers
                 });
-                $('.miles-up').html(Math.round(distance_jb*0.621371)+' miles');                
+                $('.miles-up').html(Math.round(distance_jb*0.621371)+' miles');
                 Setlists(query);
             } else {
                 Setlists(query);
@@ -77,7 +77,7 @@ function EchoNest(loc){
                 });
                 html+='</ol>';
                 $('.sidebar #content').append(html);
-            } 
+            }
         },'jsonp');
 }
 
@@ -111,38 +111,38 @@ function GetSentiment(query,loc,lat,lng){
 	    $.getJSON('/tools/alchemy.php',{name:query,loc:loc,lat:lat,lng:lng},
         function(data) {
             var html = '<h3>Show Vibe</h3>';
-            
+
             if(data.results && data.results.length>0){
 				$.each(data.results,function(){
 					html += '<div>\
 	                <img src="/images/'+this.type+'.svg" class="svg face-'+this.type+' twitter-face">\
 	                <a href="http://twitter.com/'+this.screen_name+'" class="twitter-handle">@'+this.screen_name+'</a>\
 	                <p class="twitter-tweet">'+this.text+'</p>\
-	              </div>';              
+	              </div>';
 				});
 				$('#song-progress.progress .bar').css('width','100%').fadeOut();
 				$('.sidebar #content').append(html);
 				updateVibeImages();
-				
+
 				var sentiment = '<div><h4>Show Vibe</h4><div class="progress">\
 				  <div class="bar bar-success" data-toggle="tooltip" style="width: '+Math.round((data.types['positive']/data.results.length)*100)+'%;" title="Good Vibes: '+Math.round((data.types['positive']/data.results.length)*100)+'%"></div>\
 				  <div class="bar bar-info" data-toggle="tooltip" style="width: '+Math.round((data.types['neutral']/data.results.length)*100)+'%;" title="Neutral Vibes:'+Math.round((data.types['neutral']/data.results.length)*100)+'%"></div>\
 				  <div class="bar bar-danger" data-toggle="tooltip" style="width: '+Math.round((data.types['negative']/data.results.length)*100)+'%;" title="Bad Vibes:'+Math.round((data.types['negative']/data.results.length)*100)+'%"></div>\
-				</div></div>';				
+				</div></div>';
 				$('.marker-info').append(sentiment);
 				$('.bar').tooltip();
 			}
-			
+
         },'jsonp');
 }
 
 function addPOI_JB(poi){
-	
+
 	var d = new Date(poi.Date);
 	poi.Date = d.getMonth()+'/'+d.getDate()+'/'+d.getFullYear();
-	
+
 	$('.sidebar #content').append('<div class="marker-place">'+poi.Date+' '+poi.Venue.City+', '+poi.Venue.State+'</div>');
-	
+
 	function getDesc(poi){
 		var html ='<div class="marker-info"><h3>Show Info</h3><div class="concert-meta">\
             <div class="marker-date">'+poi.Date+'</div>\
@@ -181,24 +181,24 @@ if(!centered){
 }
 
 function addPOI_SL(poi){
-	
+
 	var d = new Date(poi['@eventDate'].substring(6, 10)+'-'+poi['@eventDate'].substring(3, 5)+'-'+poi['@eventDate'].substring(0, 2));
 	poi.Date = d.getMonth()+'/'+d.getDate()+'/'+d.getFullYear();
-	
+
 	$('.sidebar #content').append('<div class="marker-place">'+poi.Date+' '+poi.venue.city['@name']+', '+poi.venue.city['@stateCode']+'</div>');
-	
+
 	function getDesc(poi){
-		
+
 		var html ='<div class="marker-info"><h3>Show Info</h3><div class="concert-meta">\
             <div class="marker-date">'+poi.Date+'</div>\
             <div class="marker-place">'+poi.venue.city['@name']+', '+poi.venue.city['@stateCode']+'</div>\
             <div class="marker-title">'+poi.venue['@name']+'</div>\
           </div></div>';
-          
+
 	    if(poi.sets != "" && typeof poi.sets.set != 'undefined'){
 	    	html += '<div class="hide marker-description">\
               <h3>Setlist</h3>';
-              
+
 		    $.each(poi.sets.set,function(){
 		    	html += '<ol>';
 		    	if(this['@name']){
@@ -208,19 +208,19 @@ function addPOI_SL(poi){
 			    		html += '<h4>'+this['@name']+'</h4>';
 		    	} else {
 			    	html += '<h4>Set One</h4>';
-		    	}	
+		    	}
 		    	if(this.song){
 				   $.each(this.song,function(){
 				   	  if(!this.cover)
-	 			   	  	  html += '<li><a href="#" class="rdio-play">'+this['@name']+'</a></li>'; 	
+	 			   	  	  html += '<li><a href="#" class="rdio-play">'+this['@name']+'</a></li>';
 				   	  else
-						  html += '<li class="cover"><a href="#" class="rdio-play">'+this['@name']+'</a> <a href="#" class="cover" data-toggle="tooltip" title="'+this.cover['@name']+'|'+this['@name']+'">*</a></li>'; 
-				   }); 
+						  html += '<li class="cover"><a href="#" class="rdio-play">'+this['@name']+'</a> <a href="#" class="cover" data-toggle="tooltip" title="'+this.cover['@name']+'|'+this['@name']+'">*</a></li>';
+				   });
 			   }
-			   html += '</ol>'; 
+			   html += '</ol>';
 		    });
 			html += '</div>';
-	    }	   
+	    }
 
 	    return html;
 	}
@@ -254,7 +254,7 @@ if(!centered){
 }
 
 function DrawPolyLine(){
-	var polyline = L.polyline(eventList,{color:'#115e67',weight:2,opacity:1,smoothFactor:10}).addTo(map);	
+	var polyline = L.polyline(eventList,{color:'#115e67',weight:2,opacity:1,smoothFactor:10}).addTo(map);
 	if(eventList.length > 0){
 		//zoom to bounds
     	map.fitBounds(polyline.getBounds());
@@ -284,33 +284,33 @@ function deg2rad(deg) {
 /*
  * Replace all SVG images with inline SVG
  */
-function updateVibeImages(){ 
-jQuery('img.svg').each(function(){
-    var $img = jQuery(this);
-    var imgID = $img.attr('id');
-    var imgClass = $img.attr('class');
-    var imgURL = $img.attr('src');
+function updateVibeImages(){
+    jQuery('img.svg').each(function(){
+        var $img = jQuery(this);
+        var imgID = $img.attr('id');
+        var imgClass = $img.attr('class');
+        var imgURL = $img.attr('src');
 
-    jQuery.get(imgURL, function(data) {
-        // Get the SVG tag, ignore the rest
-        var $svg = jQuery(data).find('svg');
+        jQuery.get(imgURL, function(data) {
+            // Get the SVG tag, ignore the rest
+            var $svg = jQuery(data).find('svg');
 
-        // Add replaced image's ID to the new SVG
-        if(typeof imgID !== 'undefined') {
-            $svg = $svg.attr('id', imgID);
-        }
-        // Add replaced image's classes to the new SVG
-        if(typeof imgClass !== 'undefined') {
-            $svg = $svg.attr('class', imgClass+' replaced-svg');
-        }
+            // Add replaced image's ID to the new SVG
+            if(typeof imgID !== 'undefined') {
+                $svg = $svg.attr('id', imgID);
+            }
+            // Add replaced image's classes to the new SVG
+            if(typeof imgClass !== 'undefined') {
+                $svg = $svg.attr('class', imgClass+' replaced-svg');
+            }
 
-        // Remove any invalid XML tags as per http://validator.w3.org
-        $svg = $svg.removeAttr('xmlns:a');
+            // Remove any invalid XML tags as per http://validator.w3.org
+            $svg = $svg.removeAttr('xmlns:a');
 
-        // Replace image with new SVG
-        $img.replaceWith($svg);
+            // Replace image with new SVG
+            $img.replaceWith($svg);
+        });
     });
-});
 }
 
 function updatePlaying(result){
@@ -320,64 +320,64 @@ function updatePlaying(result){
 	$('#song-progress.progress .bar').show().css({'width':'0%','color':'#000','text-align':'right'}).show().find('.what').html('Playing '+result.name);
 }
 function Rdio(self,song,artist){
-	
+
 	var ttype=(!song || song == '')?'Artist':'Track';
-	
+
 	R.ready(function() {
 	  R.player.on("change:position", function(newValue) {
 		  if(songDuration)
 			  $('#song-progress.progress .bar').css('width',((newValue/songDuration)*100)+'%').find('.what').html(newValue+'/'+songDuration);
   		});
- 
+
       R.request({
         method: "search",
         content: {
-          query: song+' '+artist, 
+          query: song+' '+artist,
           types: ttype
         },
         success: function(response) {
-          $('.sidebar #content').find('div.player').remove();	
+          $('.sidebar #content').find('div.player').remove();
           var result=response.result.results[0];
           var key;
-          
+
           if(ttype=='Track'){
 	          $.each(response.result.results,function(){
 		         if(this.name.toLowerCase()==song.toLowerCase())
-		           result = this; 
+		           result = this;
 	          });
-	          key=result.key 
+	          key=result.key
           } else if(result.topSongsKey){
 	          key=result.topSongsKey;
           } else {
-	          key=result.key 
+	          key=result.key
           }
-          
+
           if(lastTrack==result.key)
 			R.player.play();
 		  else
 		  	R.player.play({source:key});
-          
-          lastTrack=key;		
-          
+
+          lastTrack=key;
+
           if(!result.artist){
 	          setTimeout(function(){
 		      	var track = R.player.playingTrack();
 		      	if(track.attributes)
-				  	updatePlaying(track.attributes);    
+				  	updatePlaying(track.attributes);
 	          }, 1000);
-	          
+
           } else {
           	updatePlaying(result);
           }
-          
-          $(self).addClass('playing');          
+
+          $(self).addClass('playing');
           $(self).parent().prepend('<div class="player"></div>');
         },
         error: function(response) {
-          
+
         }
       });
-    });	
+    });
 }
 
 function Search(){
@@ -393,48 +393,50 @@ $( document ).ready(function() {
         	document.location.href='/'+$('#q').val();
         }
     });
-    
+
+    updateVibeImages();
+
     $('#song-progress.progress .bar').on('click',function(){
 	    R.player.togglePause();
     });
-    
+
     $('#q').on('keydown',function(e){
 	    if(e.keyCode==13)
-		    $('#search-btn').click();	    
+		    $('#search-btn').click();
     });
-    
+
     markerLayer.on('click',function(e,d){
 	    var content = $(e.layer._popup._content);
-	    
+
 	    $(content).find('.marker-description').removeClass('hide');
 	    $('.sidebar #content').empty().append($(content));
-	    
+
 	    var loc = $(content).find('.marker-place').html();
 	    if(loc)
 		    EchoNest(loc);
 		GetSentiment($('#q').val(),loc,e.layer.feature.geometry.coordinates[1],e.layer.feature.geometry.coordinates[0]);
-	    return false;	    
+	    return false;
     });
-    
+
     $('.sidebar #content').on('click','li.cover a.cover',function(){
     	var tit = $(this).attr('title').split('|');
     	if(tit.length==2)
 		    Rdio(this,tit[1],tit[0]);
     });
-    		      
+
     $('.sidebar #content').on('click','a.rdio-play',function(){
     	if($(this).hasClass('playing')){
 	    	R.player.pause();
 	    	$('#song-progress.progress .bar').fadeOut();
 	    	$('.sidebar #content a.rdio-play').removeClass('playing');
-	    	$('.sidebar #content').find('div.player').remove();		        
+	    	$('.sidebar #content').find('div.player').remove();
 	    	return;
 		}
 		if($(this).hasClass('artist-only'))
 			Rdio(this,'',$(this).html());
-		else	
+		else
 	    	Rdio(this,$(this).html(),$('#q').val());
 	    return false;
     });
-    
+
 });
