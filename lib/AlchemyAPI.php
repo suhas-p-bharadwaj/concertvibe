@@ -25,6 +25,10 @@ class AlchemyAPI
 		$result=array();
 		$text_blog = '';
 		$response=$this->GetTextFromTwitter($band,$city,$lat,$lng);
+		
+		print_r($response);
+		die();
+		
 		if(!empty($response->statuses)){
 			foreach($response->statuses as $status){
 			
@@ -74,14 +78,11 @@ class AlchemyAPI
 		$twitter=new Twitter();
 		$twitter->setAccessToken();		
 		$response=array();
-		//$response=$twitter->Search($band,$lat,$lng);
-		//if(empty($response->statuses)){
-			 $response=$this->GetTextFromTwitter($band.'+'.$city);
-			 if(empty($response->statuses)){
-				 $response=$this->GetTextFromTwitter($band);
-			 }
-		//}	
-        return $response;
+		$response=$twitter->Search($band.'+'.$city,$lat,$lng);
+		if(empty($response->statuses)){
+			$response=$this->GetTextFromTwitter($band);
+		}
+		return $response;
 	}
 	
 	public static function TwitterizeText($text)

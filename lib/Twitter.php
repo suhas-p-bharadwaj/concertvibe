@@ -151,6 +151,7 @@ if(!empty($lat) && !empty($lng))
 if($date)
 	            $httpClient->setParameterGet('until',date('Y-m-d',strtotime('-12 days')));
 */
+
             $httpClient->setMethod(Zend_Http_Client::GET);
              
         try{
