@@ -1,10 +1,8 @@
 var current = {lat: 39.7392, lng: -104.9842};
-var mapLayers = [];
+var eventList = [], mapLayers = [];
 var map = L.mapbox.map('map', 'avantassel.map-6y8nsvv5').setView([current.lat,current.lng], 5);
 var markerLayer = L.mapbox.markerLayer(mapLayers).addTo(map);
-var eventList = [];
-var distance = 0;
-var lastTrack ='';
+var distance_jb = 0, distance_sl = 0, lastTrack ='';
 
 function clearLayer(layerName){
     mapLayers=[];
@@ -30,11 +28,11 @@ function JamBaseSearch(query){
 }
 
 function JamBaseEvents(query,artistId){
-	    $.getJSON('/tools/jambase.php',{events:true,artistId:artistId}, 
+	    $.getJSON('/tools/jambase.php',{events:true,artistId:artistId},
         function(data) {
 
             if(typeof data.Events != 'undefined'){
-            	$('.sidebar #content').append('<h3>Upcoming Shows</h3>');
+            	$('.sidebar #content').append('<h3>Upcoming Shows</h3><div class="miles-up"></div>');
                 $.each(data.Events,function(){
                 	if(typeof this.Venue != 'undefined')
 	                    addPOI_JB(this);
@@ -42,8 +40,9 @@ function JamBaseEvents(query,artistId){
                 markerLayer.setGeoJSON({
                     type: 'FeatureCollection',
                     features: mapLayers
-                });     
-                Setlists(query);            
+                });
+                $('.miles-up').html(Math.round(distance_jb*0.621371)+' miles');
+                Setlists(query);
             } else {
                 //sad path
             }
@@ -55,7 +54,7 @@ function Setlists(query){
         function(data) {
 
             if(typeof data.setlists.setlist != 'undefined'){
-            	$('.sidebar #content').append('<h3>Past Shows</h3>');
+            	$('.sidebar #content').append('<h3>Past Shows</h3><div class="miles-past"></div>');
                 $.each(data.setlists.setlist,function(){
                 	if(typeof this.venue != 'undefined')
 	                    addPOI_SL(this);
@@ -64,6 +63,7 @@ function Setlists(query){
                     type: 'FeatureCollection',
                     features: mapLayers
                 });
+                $('.miles-past').html(Math.round(distance_sl*0.621371)+' miles');
                 DrawPolyLine();
             } else {
                 //sad path
@@ -72,7 +72,7 @@ function Setlists(query){
 }
 
 function GetSentiment(query,lat,lng){
-	    $.getJSON('/tools/alchemy.php',{name:query,lat:lat,lng:lng}, 
+	    $.getJSON('/tools/alchemy.php',{name:query,lat:lat,lng:lng},
         function(data) {
             
             /*
@@ -97,7 +97,7 @@ function GetSentiment(query,lat,lng){
 */
           
             console.log(data);
-            
+
         },'jsonp');
 }
 
@@ -116,12 +116,12 @@ function addPOI_JB(poi){
           </div>';
 	    return html;
 	}
-	
+
 	if(eventList.length > 0)
-		distance+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.Venue.Latitude),parseInt(poi.Venue.Longitude));
-		
+		distance_jb+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.Venue.Latitude),parseInt(poi.Venue.Longitude));
+
 	eventList.push([parseFloat(poi.Venue.Latitude),parseFloat(poi.Venue.Longitude)]);
-		
+
     mapLayers.push({
         type: 'Feature',
         geometry: {
@@ -180,12 +180,12 @@ function addPOI_SL(poi){
 	    }	    
 	    return html;
 	}
-	
+
 	if(eventList.length > 0)
-		distance+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.venue.city.coords['@lat']),parseInt(poi.venue.city.coords['@long']));
-		
+		distance_sl+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.venue.city.coords['@lat']),parseInt(poi.venue.city.coords['@long']));
+
 	eventList.push([parseFloat(poi.venue.city.coords['@lat']),parseFloat(poi.venue.city.coords['@long'])]);
-		
+
     mapLayers.push({
         type: 'Feature',
         geometry: {
@@ -203,31 +203,24 @@ function addPOI_SL(poi){
     $('.poi-list').append('<li>'+getDesc(poi)+'</li>');
 }
 
-function getDistance(miles){
-	if(miles)
-		return distance*0.621371;
-	else
-		return distance;
-}
-
-function DrawPolyLine(){	
+function DrawPolyLine(){
 	if(eventList){
 		var polyline = L.polyline(eventList,{color:'#115e67',weight:2,opacity:1,smoothFactor:10}).addTo(map);
 		//zoom to bounds
-    	map.fitBounds(polyline.getBounds());	
+    	map.fitBounds(polyline.getBounds());
     }
 }
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
-  var a = 
+  var dLon = deg2rad(lon2-lon1);
+  var a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
     Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var d = R * c; // Distance in km
   return d;
 }
@@ -267,17 +260,19 @@ jQuery('img.svg').each(function(){
 
 });
 
-function pausePlayer(){
-	R.player.pause();
-}
-
 $( document ).ready(function() {
 
     $('#search-btn').on('click',function() {
         if($('#q').val()!=''){
-        	clearLayer();        
-	        JamBaseSearch($('#q').val());                       
+        	clearLayer();
+	        JamBaseSearch($('#q').val());
         }
+    });
+    
+    $('#q').on('keydown',function(e){
+	    if(e.keyCode==13)
+		    $('#search-btn').click();
+	    
     });
     
     markerLayer.on('click',function(e,d){
@@ -295,12 +290,12 @@ $( document ).ready(function() {
 	    	$('.sidebar #content a.rdio-play').removeClass('playing');
 	    	$('.sidebar #content').remove('div.player');		        
 	    	return;
-    	}    	
-    	
-    	var self=this;
+		}
+		var self=this;
+			
     	R.ready(function() { // just in case the API isn't ready yet
               R.request({
-		        method: "search", 
+		        method: "search",
 		        content: {
 		          query: $('#q').val()+' '+$(self).html(), 
 		          types: "Track"
