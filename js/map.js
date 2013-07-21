@@ -113,7 +113,7 @@ function GetSentiment(query,loc,lat,lng){
 
 	    $.getJSON('/tools/alchemy.php',{name:query,loc:loc,lat:lat,lng:lng},
         function(data) {
-            var html = '<div><h3>Show Vibe</h3>';
+            var html = '<div class="leaflet-popup-content-wrapper"><h3>Show Vibe</h3>';
             
             if(data.results && data.results.length>0){
 				$.each(data.results,function(){
@@ -127,7 +127,7 @@ function GetSentiment(query,loc,lat,lng){
 				$('.sidebar #content').append(html);
 				updateVibeImages();
 				
-				var sentiment = '<div class="leaflet-popup-content-wrapper"><h4>Show Vibe</h4><div id="alchemy" class="progress">\
+				var sentiment = '<div><h4>Show Vibe</h4><div id="alchemy" class="progress">\
 				  <div class="bar bar-success" data-toggle="tooltip" style="width: '+Math.round((data.types['positive']/data.results.length)*100)+'%;" title="Good Vibes: '+Math.round((data.types['positive']/data.results.length)*100)+'%"></div>\
 				  <div class="bar bar-info" data-toggle="tooltip" style="width: '+Math.round((data.types['neutral']/data.results.length)*100)+'%;" title="Neutral Vibes:'+Math.round((data.types['neutral']/data.results.length)*100)+'%"></div>\
 				  <div class="bar bar-danger" data-toggle="tooltip" style="width: '+Math.round((data.types['negative']/data.results.length)*100)+'%;" title="Bad Vibes:'+Math.round((data.types['negative']/data.results.length)*100)+'%"></div>\
