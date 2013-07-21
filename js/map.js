@@ -1,7 +1,7 @@
 var current = {lat: 39.7392, lng: -104.9842};
 //var current = {lat: 43.55, lng: 7.0166667};
 var eventList = [], mapLayers = [];
-var map = L.mapbox.map('map', 'avantassel.map-6y8nsvv5').setView([current.lat,current.lng], 5);
+var map = L.mapbox.map('map', 'avantassel.map-6y8nsvv5');
 var centered = false;
 var markerLayer = L.mapbox.markerLayer(mapLayers).addTo(map);
 var distance_jb = 0, distance_sl = 0, lastTrack ='';
@@ -157,10 +157,12 @@ function addPOI_JB(poi){
 
 	eventList.push([parseFloat(poi.Venue.Latitude),parseFloat(poi.Venue.Longitude)]);
 
-	if(!centered){
+	/*
+if(!centered){
 		map.setView([parseFloat(poi.Venue.Latitude),parseFloat(poi.Venue.Longitude)], 5);
 		centered=true;
 	}
+*/
     mapLayers.push({
         type: 'Feature',
         geometry: {
@@ -227,10 +229,12 @@ function addPOI_SL(poi){
 		distance_sl+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.venue.city.coords['@lat']),parseInt(poi.venue.city.coords['@long']));
 
 	eventList.push([parseFloat(poi.venue.city.coords['@lat']),parseFloat(poi.venue.city.coords['@long'])]);
-	if(!centered){
+	/*
+if(!centered){
 		map.setView([parseFloat(poi.venue.city.coords['@lat']),parseFloat(poi.venue.city.coords['@long'])], 5);
 		centered=true;
 	}
+*/
 
     mapLayers.push({
         type: 'Feature',
@@ -380,6 +384,7 @@ function Search(){
 	$('#song-progress.progress .bar').show().css('width','10%');
      	clearLayer();
       JamBaseSearch($('#q').val());
+      $('body').addClass('results');
 }
 $( document ).ready(function() {
 
@@ -388,8 +393,6 @@ $( document ).ready(function() {
         	document.location.href='/'+$('#q').val();
         }
     });
-    
-    
     
     $('#song-progress.progress .bar').on('click',function(){
 	    R.player.togglePause();

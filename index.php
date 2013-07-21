@@ -84,6 +84,8 @@
 	<?
 	if(isset($_GET['q'])){
 		echo '<script>$(document).ready(function(){Search("'.$_GET['q'].'");});</script>';
+	} else {
+		echo 'map.setView([current.lat,current.lng], 5);';
 	}
 	?>
 
