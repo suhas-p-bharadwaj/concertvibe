@@ -45,7 +45,7 @@
 
         <!-- Sidebar -->
         <div id="" class="sidebar off">
-          <div class="progress progress-striped active">
+          <div id="song-progress" class="progress progress-striped active">
 			  <div class="bar hide" style="width: 10%;"><span class="what">Loading...</span></div> 
 		  </div>
           <div id="player">
@@ -83,7 +83,7 @@
 
 	<?
 	if(isset($_GET['q'])){
-		echo '<script>$(document).ready(function(){clearLayer();JamBaseSearch("'.$_GET['q'].'");});</script>';
+		echo '<script>$(document).ready(function(){Search("'.$_GET['q'].'");});</script>';
 	}		
 	?>
 	

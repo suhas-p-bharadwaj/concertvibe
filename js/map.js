@@ -13,7 +13,7 @@ function clearLayer(layerName){
     DrawPolyLine();
     $('.poi-list').empty();
     $('.sidebar #content').empty();
-    $('.progress .bar').css('width','0%');
+    $('#song-progress.progress .bar').css('width','0%');
     markerLayer.setGeoJSON({
         type: 'FeatureCollection',
         features: mapLayers
@@ -22,7 +22,7 @@ function clearLayer(layerName){
 
 function JamBaseSearch(query){
 	
-	$('.progress .bar').css('width','20%');
+	$('#song-progress.progress .bar').css('width','20%');
 	
     $.getJSON('/tools/jambase.php',{artist:true,name:query},
         function(data) {
@@ -42,7 +42,7 @@ function JamBaseSearch(query){
 }
 
 function JamBaseEvents(query,artistId){
-		$('.progress .bar').css('width','40%').find('.what').html('Getting the Events...');
+		$('#song-progress.progress .bar').css('width','40%').find('.what').html('Getting the Events...');
 	    $.getJSON('/tools/jambase.php',{events:true,artistId:artistId},
         function(data) {
 
@@ -65,7 +65,7 @@ function JamBaseEvents(query,artistId){
 }
 
 function EchoNest(loc){
-		$('.progress .bar').show().css('width','40%').find('.what').html('Getting the EchoNest...');
+		$('#song-progress.progress .bar').show().css('width','40%').find('.what').html('Getting the EchoNest...');
 	    $.getJSON('/tools/echonest.php',{location:loc},
         function(data) {
 
@@ -82,7 +82,7 @@ function EchoNest(loc){
 }
 
 function Setlists(query){
-		$('.progress .bar').css('width','60%').find('.what').html('Getting the Setlists...');
+		$('#song-progress.progress .bar').css('width','60%').find('.what').html('Getting the Setlists...');
 	    $.getJSON('/tools/setlistfm.php',{events:true,name:query},
         function(data) {
 
@@ -107,7 +107,7 @@ function Setlists(query){
 
 
 function GetSentiment(query,loc,lat,lng){
-		$('.progress .bar').show().css('width','60%').find('.what').html('Getting the Vibe...');
+		$('#song-progress.progress .bar').show().css('width','60%').find('.what').html('Getting the Vibe...');
 	    $.getJSON('/tools/alchemy.php',{name:query,loc:loc,lat:lat,lng:lng},
         function(data) {
             var html = '<h3>Show Vibe</h3>';
@@ -120,7 +120,7 @@ function GetSentiment(query,loc,lat,lng){
 	                <p class="twitter-tweet">'+this.text+'</p>\
 	              </div>';              
 				});
-				$('.progress .bar').css('width','100%').fadeOut();
+				$('#song-progress.progress .bar').css('width','100%').fadeOut();
 				$('.sidebar #content').append(html);
 				updateVibeImages();
 				
@@ -256,7 +256,7 @@ function DrawPolyLine(){
     	map.fitBounds(polyline.getBounds());
     }
     centered=false;
-    $('.progress .bar').css('width','100%').fadeOut();
+    $('#song-progress.progress .bar').css('width','100%').fadeOut();
 }
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -313,7 +313,7 @@ function updatePlaying(result){
 	console.log(result);
 	$('#player').empty().css('border-bottom','1px dotted balck').append('<h3>Now Playing</h3><img src="'+result.icon+'"/><br/>Artist: '+result.artist+'<br/>Album: '+result.album+'<br/>Song: '+result.name+'<h3>&nbsp;</h3>');
 	songDuration=result.duration;
-	$('.progress .bar').show().css({'width':'0%','color':'#000','text-align':'right'}).show().find('.what').html('Playing '+result.name);
+	$('#song-progress.progress .bar').show().css({'width':'0%','color':'#000','text-align':'right'}).show().find('.what').html('Playing '+result.name);
 }
 function Rdio(self,song,artist){
 	
@@ -322,7 +322,7 @@ function Rdio(self,song,artist){
 	R.ready(function() {
 	  R.player.on("change:position", function(newValue) {
 		  if(songDuration)
-			  $('.progress .bar').css('width',((newValue/songDuration)*100)+'%').find('.what').html(newValue+'/'+songDuration);
+			  $('#song-progress.progress .bar').css('width',((newValue/songDuration)*100)+'%').find('.what').html(newValue+'/'+songDuration);
   		});
  
       R.request({
@@ -376,17 +376,22 @@ function Rdio(self,song,artist){
     });	
 }
 
+function Search(){
+	$('#song-progress.progress .bar').show().css('width','10%');
+     	clearLayer();
+      JamBaseSearch($('#q').val());
+}
 $( document ).ready(function() {
 
     $('#search-btn').on('click',function() {
         if($('#q').val()!=''){
-        	$('.progress .bar').show().css('width','10%');
-        	clearLayer();
-	        JamBaseSearch($('#q').val());
+        	document.location.href='/'+$('#q').val();
         }
     });
     
-    $('.progress .bar').on('click',function(){
+    
+    
+    $('#song-progress.progress .bar').on('click',function(){
 	    R.player.togglePause();
     });
     
@@ -417,7 +422,7 @@ $( document ).ready(function() {
     $('.sidebar #content').on('click','a.rdio-play',function(){
     	if($(this).hasClass('playing')){
 	    	R.player.pause();
-	    	$('.progress .bar').fadeOut();
+	    	$('#song-progress.progress .bar').fadeOut();
 	    	$('.sidebar #content a.rdio-play').removeClass('playing');
 	    	$('.sidebar #content').find('div.player').remove();		        
 	    	return;
