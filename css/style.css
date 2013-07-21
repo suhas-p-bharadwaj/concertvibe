@@ -11,6 +11,7 @@ padding:0
 
 body {
 	height:100%;
+	font-family: 'Droid Sans', sans-serif;
 }
 
 table {
@@ -245,28 +246,39 @@ float:left;
 width:33%
 }
 
+.header-logo {
+	display: inline-block;
+}
+
 #header.header-bar {
-background:#333 url(/images/header-bg.jpg);
--moz-box-shadow:0 1px 1px rgba(0,0,0,0.05);
--webkit-box-shadow:0 1px 1px rgba(0,0,0,0.05);
-box-shadow:0 1px 1px rgba(0,0,0,0.05);
-border-bottom:1px solid #000;
-position:fixed;
-top:0;
+background: #f7f7f7;
+-moz-box-shadow:0 1px 1px rgba(12, 12, 12, 0.5);
+-webkit-box-shadow:0 1px 1px rgba(12, 12, 12, 0.5);
+box-shadow:0 1px 1px rgba(12, 12, 12, 0.5);
+position:absolute;
 z-index:115;
-width:100%
+top: 50%;
+margin-top: -;
+width: 40%;
+max-width:600px;
+color: #000;
 }
 
 #header.header-bar h1 {
 float:left;
 margin-bottom:0;
 font-size:26px;
-padding:5px 0
+padding:10px 0
 }
 
 #header.header-bar h1 a {
 background:none;
 padding:0
+}
+
+.header-container {
+	width: 98%;
+	margin: auto;
 }
 
 
@@ -290,13 +302,7 @@ line-height:29px
 }
 
 #search-box {
-padding-top:20px;
-position:fixed;
-top:61px;
 z-index:130;
-background:#eee;
-background:rgba(255,255,255,0.5);
-width:100%
 }
 
 #search-box.hide {
@@ -304,8 +310,8 @@ display:none
 }
 
 #search-box #dialog input[type=text] {
-width:844px;
-margin-right:2px
+margin-right:2px;
+width: 80%;
 }
 
 nav#session {
@@ -373,13 +379,12 @@ border-right:1px solid #222;
 border-left:1px solid #555
 }
 
-nav#main-menu .main-text {
-font-size:14px;
-line-height:16px;
-color:#fff;
-text-shadow:0 1px 0 rgba(0,0,0,0.5);
--webkit-text-shadow:0 1px 0 rgba(0,0,0,0.5);
--moz-text-shadow:0 1px 0 rgba(0,0,0,0.5)
+nav#main-menu .main-text, nav#secondary-menu .main-text {
+	color: #333;
+	text-decoration: none;
+	font-size: 24px;
+	text-shadow: none;
+	border: none;
 }
 
 nav#main-menu .descriptor {
@@ -389,8 +394,6 @@ color:#ccc
 nav#secondary-menu {
 float:right;
 height:60px;
-border-right:1px solid #555;
-border-left:1px solid #222
 }
 
 nav#secondary-menu li {
@@ -400,18 +403,7 @@ line-height:34px
 nav#secondary-menu li a {
 display:inline-block;
 color:#fff;
-padding:18px 15px;
-font-size:12px;
-line-height:24px;
-border-right:1px solid #222;
-border-left:1px solid #555;
-text-shadow:0 1px 0 rgba(0,0,0,0.5);
--webkit-text-shadow:0 1px 0 rgba(0,0,0,0.5);
--moz-text-shadow:0 1px 0 rgba(0,0,0,0.5)
-}
-
-nav#secondary-menu li a:hover {
-background:#333
+padding:12px 15px;
 }
 
 nav#secondary-menu li.with-icon img {
@@ -850,15 +842,6 @@ margin-right:auto;
 margin-left:auto
 }
 
-@font-face {
-font-family:BebasNeue;
-src:url(/css/BebasNeue-14f338cd1c45e7d67336db4f935471e3.otf)
-}
-
-body {
-font:13px/1.5 'Helvetica Neue',Arial,'Liberation Sans',FreeSans,sans-serif
-}
-
 hr {
 border:0 #999 solid;
 border-top-width:1px;
@@ -972,10 +955,9 @@ zoom:1
 }
 
 #dialog {
-margin:0 auto 30px;
+margin:0 auto;
 text-align:left;
 padding:5px;
-background:#ddd;
 -webkit-border-radius:2px;
 -moz-border-radius:2px;
 border-radius:2px
@@ -1001,44 +983,33 @@ border:1px solid red
 
 #dialog input[type=text] {
 float:left;
-background:#fff;
+background: transparent;
 color:#000;
 padding:8px 15px;
-border:1px solid #ccc;
-width:537px;
+border: none;
+border-bottom:1px solid #ccc;
+width: 78%;
 font-size:24px;
 height:31px;
 outline:none;
--webkit-border-radius:2px;
--moz-border-radius:2px;
-border-radius:2px
-}
-
-#dialog input[type=text]::focus {
-border:1px solid #333
+-webkit-border-radius:6px;
+-moz-border-radius:6px;
+border-radius:6px
 }
 
 #dialog input[type=text]::-webkit-input-placeholder,#dialog input[type=text]::-moz-placeholder {
 color:#999
 }
 
-#dialog input[type=submit] {
+#dialog button[type=submit] {
 margin-left:3px;
 width:48px;
 height:49px;
 font-weight:700;
 text-transform:uppercase;
 cursor:pointer;
--webkit-border-radius:2px;
--moz-border-radius:2px;
-border-radius:2px
-}
-
-#dialog input[type=submit].search {
-background-image:url(/images/mag-glass-24-55701c861c59d88c3af895d2835ffcab.png);
-background-position:center center;
-background-repeat:no-repeat;
-text-indent:-9999px
+border: none;
+background: none;
 }
 
 #dialog input[type=submit]:hover {
@@ -1240,37 +1211,110 @@ padding:3px 15px
 	height: 100%;
 }
 
+.leaflet-right.leaflet-bottom {
+	left: 0;
+	right: auto !important;
+}
+
 .sidebar {
-    margin-top: 60px;
-    right: 20px;
-    top: 60px;
+    padding: 4px;
+    top: 0;
     width: 220px;
-    height: 100%;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: absolute;
+    background-color: #f7f7f7;
+    line-height: 22px;
+    right: 0;
+    bottom: 0;
+    -webkit-box-shadow: -1px 1px 1px rgba(12, 12, 12, 0.5);
+       -moz-box-shadow: -1px 1px 1px rgba(12, 12, 12, 0.5);
+            box-shadow: -1px 1px 1px rgba(12, 12, 12, 0.5);
+}
+
+.leaflet-popup-content-wrapper {
+	padding: 4px 8px !important;
+	margin-bottom: 8px
+}
+
+.twitter-face {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.twitter-info {
+	margin-bottom: 2px;
+}
+
+.twitter-tweet {
+	padding: 4px 0;
+	font-size: 14px;
+	font-style: italic;
+	line-height: 19px;
+	margin-bottom: 16px;
+}
+
+.face-happy path {
+	stroke: green;
+}
+
+.face-sad path {
+	stroke: red;
+}
+
+.face-neutral path {
+	stroke: gray;
+}
+
+.twitter-handle {
+	text-decoration: none;
+	display: inline-block;
+	vertical-align:middle;
+}
+
+.marker-place {
+	margin-bottom: 6px;
+}
+
+.sidebar{
+	
 }
 
 .sidebar ul {
   list-style-type: none;
 }
- 
+
 .sidebar h3 {
-  font: bold 12px Helvetica, Verdana, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
 }
- 
+
+.sidebar h4 {
+	font-size: 16px;
+	font-weight: bold;
+}
+
 .sidebar li img {
   float: left;
   margin: 0 15px 0 0;
 }
- 
+
 .sidebar li p {
   font: 200 12px/1.5 Georgia, Times New Roman, serif;
 }
- 
-.sidebar li {
-  padding: 4px;
-  border-bottom: 2px solid #eee;
+
+.sidebar ol {
+	margin-bottom: 6px;
 }
- 
+.sidebar li {
+  padding: 2px 0;
+  position: relative;
+  left: 10px;
+}
+
 .sidebar li:hover {
   background: #eee;
   cursor: pointer;
@@ -1278,4 +1322,25 @@ padding:3px 15px
 
 #map{
 	border-right: 1px solid #000;
+}
+
+.set{weight:bold;size:13px;}
+
+.rdio-play {
+	}
+
+.rdio-play em{
+	width: 16px;
+	height:16px;
+	background-repeat:no-repeat;
+	background-size:contain;
+	background-position:center;
+	background-image: url('/images/rdio-play.png') no-repeat center;
+}
+
+h3.about-header {
+	border-bottom: none;
+}
+.about-section {
+	font-size: 14px;
 }

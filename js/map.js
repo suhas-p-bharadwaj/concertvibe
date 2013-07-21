@@ -17,7 +17,7 @@ function clearLayer(layerName){
 
 function JamBaseSearch(query){
 
-    $.getJSON('/tools/jambase.php',{artist:true,name:query}, 
+    $.getJSON('/tools/jambase.php',{artist:true,name:query},
         function(data) {
             if(typeof data.Artists != 'undefined'){
                 JamBaseEvents(query,data.Artists[0].Id);
@@ -31,7 +31,7 @@ function JamBaseSearch(query){
 function JamBaseEvents(query,artistId){
 	    $.getJSON('/tools/jambase.php',{events:true,artistId:artistId}, 
         function(data) {
-            
+
             if(typeof data.Events != 'undefined'){
                 $.each(data.Events,function(){
                 	if(typeof this.Venue != 'undefined')
@@ -49,9 +49,9 @@ function JamBaseEvents(query,artistId){
 }
 
 function Setlists(query){
-	    $.getJSON('/tools/setlistfm.php',{events:true,name:query}, 
+	    $.getJSON('/tools/setlistfm.php',{events:true,name:query},
         function(data) {
-            
+
             if(typeof data.setlists.setlist != 'undefined'){
                 $.each(data.setlists.setlist,function(){
                 	if(typeof this.venue != 'undefined')
@@ -78,7 +78,7 @@ function GetSentiment(query,lat,lng){
 }
 
 function addPOI_JB(poi){
-	
+
 	function getDesc(poi){
 	    var html='<p>';
 	    html += 'Sentiment: ';
@@ -108,14 +108,14 @@ function addPOI_JB(poi){
             'marker-color': '#C79926',
             'marker-symbol':'music',
             'description': getDesc(poi)
-        }        
-    });  
+        }
+    });
 
     $('.poi-list').append('<li>'+getDesc(poi)+'</li>');
 }
 
 function addPOI_SL(poi){
-	
+
 	function getDesc(poi){
 	    var html ='<p>';
 	        html+='<br/>'+poi.venue.city['@name']+', '+poi.venue.city['@stateCode'];
@@ -158,8 +158,8 @@ function addPOI_SL(poi){
             'marker-color': '#2554C7',
             'marker-symbol':'music',
             'description': getDesc(poi)
-        }        
-    });  
+        }
+    });
 
     $('.poi-list').append('<li>'+getDesc(poi)+'</li>');
 }
@@ -197,8 +197,39 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
+/*
+ * Replace all SVG images with inline SVG
+ */
+jQuery('img.svg').each(function(){
+    var $img = jQuery(this);
+    var imgID = $img.attr('id');
+    var imgClass = $img.attr('class');
+    var imgURL = $img.attr('src');
+
+    jQuery.get(imgURL, function(data) {
+        // Get the SVG tag, ignore the rest
+        var $svg = jQuery(data).find('svg');
+
+        // Add replaced image's ID to the new SVG
+        if(typeof imgID !== 'undefined') {
+            $svg = $svg.attr('id', imgID);
+        }
+        // Add replaced image's classes to the new SVG
+        if(typeof imgClass !== 'undefined') {
+            $svg = $svg.attr('class', imgClass+' replaced-svg');
+        }
+
+        // Remove any invalid XML tags as per http://validator.w3.org
+        $svg = $svg.removeAttr('xmlns:a');
+
+        // Replace image with new SVG
+        $img.replaceWith($svg);
+    });
+
+});
+
 $( document ).ready(function() {
-	
+
     $('#search-btn').on('click',function() {
         if($('#q').val()!=''){
         	clearLayer();        
