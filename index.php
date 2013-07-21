@@ -46,7 +46,13 @@
         <div id="map" style="position:absolute; top:60px; bottom:0; width:100%;"></div>
         <!-- Sidebar -->
         <div class="sidebar">
-          <!-- COPIED HTML for FED formatting, CLEAR WHEN API IS WORKIN' -->
+          <!-- HTML for FED formatting, CLEAR WHEN API IS WORKIN' -->
+          <div class="concert-meta leaflet-popup-content-wrapper">
+            <h3>When and where</h3>
+            <div class="marker-date">July 17th, 2013</div>
+            <div class="marker-place">Alpharetta, GA</div>
+            <div class="marker-title">Verizon Wireless Amphitheatre at Encore Park</div>
+          </div>
           <div class="leaflet-popup-content-wrapper">
             <h3>Audience reaction</h3>
               <div>
@@ -64,12 +70,6 @@
                 <a href="TWITTER_HANDLE" class="twitter-handle">@thiswasmyfirstshow</a href="TWITTER_HANDLE">
                 <p class="twitter-tweet">I fell asleep in the venue bathroom, woke up with a needle in me.</p>
               </div>
-          </div>
-          <div class="concert-meta leaflet-popup-content-wrapper">
-            <h3>When and where</h3>
-            <div class="marker-date">July 17th, 2013</div>
-            <div class="marker-place">Alpharetta, GA</div>
-            <div class="marker-title">Verizon Wireless Amphitheatre at Encore Park</div>
           </div>
           <div class="leaflet-popup-content-wrapper">
             <div class="marker-description">

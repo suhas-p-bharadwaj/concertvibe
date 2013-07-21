@@ -1215,12 +1215,17 @@ padding:3px 15px
 	height: 100%;
 }
 
+.leaflet-right.leaflet-bottom {
+	left: 0;
+	right: auto !important;
+}
+
 .sidebar {
     padding: 4px;
     top: 60px;
     width: 220px;
-    height: 100%;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     position: absolute;
     background-color: #f7f7f7;
     line-height: 22px;
