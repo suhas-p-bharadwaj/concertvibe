@@ -236,6 +236,7 @@ class TwitterAPIExchange
         }
         
         return $method . "&" . rawurlencode($baseURI) . '&' . rawurlencode(implode('&', $return)); 
+
     }
     
     /**

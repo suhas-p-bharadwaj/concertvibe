@@ -13,20 +13,44 @@ class AlchemyAPI
 	
 	const 	  SCOPE				= 'http://access.alchemyapi.com/calls/text';
 	
-	const 	  API_KEY  			= '7aab177c9f6b959267d27eaff7a1ff40eb1a3f55';
-		
-	public static function TextSentiment($band,$lat,$lng){
+	//const 	  API_KEY  			= '7aab177c9f6b959267d27eaff7a1ff40eb1a3f55';
 	
-		self::GetTextFromTwitter($band,$lat,$lng);		
-		die();
+	const 	  API_KEY  			= '8da86f0a977a22e600739f6f693b39fddefbd503';
+	
+	protected $total_score = 0;
+	
+	protected $types = array('positive'=>0,'negative'=>0,'neutral'=>0);
+	
+	public function StartTextSentiment($band,$lat,$lng){
+		$result=array();
+		$text_blog = '';
+		$response=$this->GetTextFromTwitter($band,$lat,$lng);
+		if(!empty($response->statuses)){
+			foreach($response->statuses as $status){
+			
+				$sentiment=$this->TextSentiment($status->text);
+				
+				if($sentiment->status=='OK'){
+					$result[]=array('screen_name'=>$status->user->screen_name,'created_at'=>$status->created_at,'text'=>self::TwitterizeText($status->text),'score'=>!empty($sentiment->docSentiment->score)?$sentiment->docSentiment->score:'','type'=>$sentiment->docSentiment->type);
+					if(!empty($sentiment->docSentiment->score))
+						$this->total_score+=$sentiment->docSentiment->score;
+					$this->types[$sentiment->docSentiment->type]++;
+				}
+				
+			}
+		}
+		return array('total_score'=>$this->total_score,'sentiments'=>$this->types,'results'=>$result);
+	}
 		
+	private function TextSentiment($text){
+	
 		require_once 'Zend/Oauth/Consumer.php';
 		$content='';		
 		$httpClient = new Zend_Http_Client();
 		$httpClient->setMethod(Zend_Http_Client::GET);
 		$httpClient->setUri(self::SCOPE.'/TextGetTextSentiment');
 		$httpClient->setParameterGet('apikey',self::API_KEY);
-		$httpClient->setParameterGet('url','https://twitter.com/search/'.$band);
+		$httpClient->setParameterGet('text',$text);
 		$httpClient->setParameterGet('outputMode','json');
 				
 		try{
@@ -46,19 +70,33 @@ class AlchemyAPI
 			return '';
 	}	
 	
-	public static function GetTextFromTwitter($band,$lat,$lng){
-		$settings = array(
-			'oauth_access_token' => "14976359-vVKYKRv1yd4ytR6pLYF3ZMaGeQFJ9GXCn7e1wM18",
-			'oauth_access_token_secret' => "WjfINcp4h2MptgUwmTfzpRACvftL34R17c22Dndmhw",
-			'consumer_key' => "JNc8HDHgLXY49T5MMyRw",
-			'consumer_secret' => "jU2o4WtAnTopJLlttxOm4O06i74XKtOfcVhT1c"
-		);
-		$twitter = new TwitterAPIExchange($settings);
-		$getfield='?q='.$band.'&geocode='.$lat.','.$lng.'&until='.date('Y-m-d',strtotime('-12 days'));
-		$response = $twitter->buildOauth('https://api.twitter.com/1.1/search/tweets.json', 'GET')->setGetfield($getfield)->performRequest();
-        echo $response;
-        
-        //return $response;
+	private function GetTextFromTwitter($band,$lat='',$lng=''){
+		$twitter=new Twitter();
+		$twitter->setAccessToken();		
+		$response=$twitter->Search($band,$lat,$lng);
+		if(empty($response->statuses) && !empty($lat))
+			return $this->GetTextFromTwitter($band);
+        return $response;
+	}
+	
+	public static function TwitterizeText($text)
+	{
+		if(empty($text))
+			return '';
+		//$text = self::ConvertLinks($text);			 
+		$text = preg_replace('#@([\\d\\w]+)#', '<a href="http://twitter.com/$1" target="_blank">$0</a>', $text);
+		$text = preg_replace('/^([\\d\\w]+):/', '<a href="http://twitter.com/$1" target="_blank">$0</a>', $text);
+		$text = preg_replace('/#([\\d\\w]+)/', '<a href="http://twitter.com/#search?q=%23$1" target="_blank">$0</a>', $text);
+		return $text;
+	}
+	
+	public static function ConvertLinks($text)
+	{
+		if(empty($text))
+			return '';
+		if(strstr($text,"http://"))
+			$text = preg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]", "<a href=\"\\0\" target='_blank'>\\0</a>", $text);
+		return $text;
 	}
 	
 }

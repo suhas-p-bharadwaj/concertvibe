@@ -3,9 +3,10 @@
 include '../lib/load.php';
 
 	$response=array();
+	$alc = new AlchemyAPI;
 	
-	if(isset($_GET['name']) && isset($_GET['lat']) && isset($_GET['lng']))
-		$response = AlchemyAPI::TextSentiment($_GET['name'],$_GET['lat'],$_GET['lng']);
+	if(isset($_GET['name']))
+		$response = $alc->StartTextSentiment($_GET['name'],isset($_GET['lat'])?$_GET['lat']:'',isset($_GET['lng'])?$_GET['lng']:'');
 	
 	//output results	
 	header("Content-type: application/json");

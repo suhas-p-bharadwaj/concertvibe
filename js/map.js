@@ -100,30 +100,17 @@ function Setlists(query){
 function GetSentiment(query,lat,lng){
 	    $.getJSON('/tools/alchemy.php',{name:query,lat:lat,lng:lng},
         function(data) {
+            var html = '<h3>Show Vibe</h3>';
             
-            /*
-<div class="leaflet-popup-content-wrapper">
-            <h3>Audience reaction</h3>
-              <div>
-                <img src="images/happy.svg" class="svg face-happy twitter-face" alt="They sucked.">
-                <a href="TWITTER_HANDLE" class="twitter-handle">@asshole</a href="TWITTER_HANDLE">
-                <p class="twitter-tweet">So good. So goooooood.</p>
-              </div>
-              <div>
-                <img src="images/neutral.svg" class="svg face-neutral twitter-face" alt="They sucked.">
-                <a href="TWITTER_HANDLE" class="twitter-handle">@mehIdontknow</a href="TWITTER_HANDLE">
-                <p class="twitter-tweet">Unimpressed. I must say.</p>
-              </div>
-              <div>
-                <img src="images/sad.svg" class="svg face-sad twitter-face" alt="They sucked.">
-                <a href="TWITTER_HANDLE" class="twitter-handle">@thiswasmyfirstshow</a href="TWITTER_HANDLE">
-                <p class="twitter-tweet">I fell asleep in the venue bathroom, woke up with a needle in me.</p>
-              </div>
-          </div>
-*/
-          
-            console.log(data);
-
+			$.each(data.results,function(){
+				html += '<div>\
+                <img src="images/'+this.type+'.svg" class="svg face-'+this.type+' twitter-face" alt="They rules.">\
+                <a href="http://twitter.com/'+this.screen_name+'" class="twitter-handle">@'+this.screen_name+'</a>\
+                <p class="twitter-tweet">'+this.text+'</p>\
+              </div>';              
+			});
+			$('.sidebar #content').append(html);
+			
         },'jsonp');
 }
 
@@ -378,9 +365,9 @@ $( document ).ready(function() {
 	    $('.sidebar #content').empty().append($(content));
 	    
 	    var loc = $(content).find('.marker-place').html();
-
 	    if(loc)
 		    EchoNest(loc);
+		GetSentiment($('#q').val(),e.layer.feature.geometry.coordinates[1],e.layer.feature.geometry.coordinates[0]);
 	    return false;	    
     });
     
@@ -394,7 +381,7 @@ $( document ).ready(function() {
     	if($(this).hasClass('playing')){
 	    	R.player.pause();
 	    	$('.sidebar #content a.rdio-play').removeClass('playing');
-	    	$('.sidebar #content').remove('div.player');		        
+	    	$('.sidebar #content').find('div.player').remove();		        
 	    	return;
 		}
 		if($(this).hasClass('artist-only'))

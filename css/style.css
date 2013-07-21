@@ -1340,11 +1340,11 @@ padding:3px 15px
 	margin-bottom: 16px;
 }
 
-.face-happy path {
+.face-positive path {
 	stroke: green;
 }
 
-.face-sad path {
+.face-negative path {
 	stroke: red;
 }
 
