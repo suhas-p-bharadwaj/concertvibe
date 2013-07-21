@@ -247,10 +247,6 @@ float:left;
 width:33%
 }
 
-.header-logo {
-	display: inline-block;
-}
-
 .logo {
 	background: url('/images/logo.png') no-repeat;
 	-webkit-background-size: 100% 100%;
@@ -274,18 +270,22 @@ background: #f7f7f7;
 -moz-box-shadow:0 1px 1px rgba(12, 12, 12, 0.5);
 -webkit-box-shadow:0 1px 1px rgba(12, 12, 12, 0.5);
 box-shadow:0 1px 1px rgba(12, 12, 12, 0.5);
+-webkit-border-radius: 3px;
+   -moz-border-radius: 3px;
+        border-radius: 3px;
 position:absolute;
 z-index:115;
 top: 50%;
-margin-top: -;
-width: 40%;
-max-width:600px;
+margin-top: -68px; /*136/2*/
+left: 50%;
+margin-left: -333.5px; /*667/2*/
+padding: 15px;
 color: #000;
 }
 
 #header.header-bar h1 {
 float:left;
-margin-bottom:0;
+margin-right: 28px;
 font-size:26px;
 padding:10px 0
 }
@@ -304,8 +304,57 @@ display:none
 }
 
 #search-box #dialog input[type=text] {
-margin-right:2px;
-width: 80%;
+width: 400px;
+-webkit-transition: border-bottom .2s linear;
+-moz-transition: border-bottom .2s linear;
+-ms-transition: border-bottom .2s linear;
+-o-transition: border-bottom .2s linear;
+transition: border-bottom .2s linear;
+
+}
+
+#search-box #dialog input[type=text]:focus {
+	border-bottom: 1px solid #3892E3;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    stroke: #666;
+  }
+  50% {
+  	stroke: rgb(255, 53, 53);
+  }
+  100% {
+    stroke: #666;
+  }
+}
+@-moz-keyframes pulse {
+	0% {
+	 	 stroke: #666;
+	}
+	50% {
+		stroke: rgb(255, 53, 53);
+	}
+	100% {
+	  stroke: #666;
+	}
+}
+@-keyframes pulse {
+	0% {
+	  stroke: #666;
+	}
+	50% {
+		stroke: rgb(255, 53, 53);
+	}
+	100% {
+	  stroke: #666;
+	}
+}
+
+#search-box #dialog input[type=text]:focus + #search-btn path {
+	stroke: rgb(255, 53, 53);
+	-webkit-animation: pulse 1.5s infinite 0 ease-in-out;
+	-moz-animation: pulse 1.5s infinite 0 ease-in-out;
 }
 
 nav#session {
@@ -951,10 +1000,6 @@ zoom:1
 #dialog {
 margin:0 auto;
 text-align:left;
-padding:5px;
--webkit-border-radius:2px;
--moz-border-radius:2px;
-border-radius:2px
 }
 
 #dialog.home {
@@ -979,35 +1024,40 @@ border:1px solid red
 float:left;
 background: transparent;
 color:#000;
-padding:8px 15px;
+padding:8px 28px 8px 6px;
 border: none;
 border-bottom:1px solid #ccc;
 width: 78%;
 font-size:24px;
 height:31px;
 outline:none;
--webkit-border-radius:6px;
--moz-border-radius:6px;
-border-radius:6px
+position: relative;
 }
 
 #dialog input[type=text]::-webkit-input-placeholder,#dialog input[type=text]::-moz-placeholder {
 color:#999
 }
 
-#dialog button[type=submit] {
-margin-left:3px;
+#search-btn {
+margin-left:-52px;
 width:48px;
 height:49px;
 font-weight:700;
 text-transform:uppercase;
-cursor:pointer;
+cursor: pointer;
+display: inline-block;
 border: none;
 background: none;
+position: relative;
+z-index: 1;
 }
 
-#dialog input[type=submit]:hover {
+#dialog button[type=submit]:hover {
 color:green
+}
+
+#search-btn img:focus, #search-btn {
+outline: 0;
 }
 
 #dialog #search-filters {

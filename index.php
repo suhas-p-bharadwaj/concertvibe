@@ -26,20 +26,18 @@
       <div class="row-fluid">
           <!--Nav content-->
             <div class="header-bar" id="header">
-              <div class="header-container">
-                <h1 class="logo-header">
-                  <a href="/" class="logo">ConcertVibe</a>
-                </h1>
-                <!--Search content-->
-                <div id="search-box">
-                  <div id="dialog">
-                    <input id="q" name="q" placeholder="Search for a band that's touring..." type="text" value="">
-                    <button id="search-btn" class="search btn primary" name="" type="submit" value="Go">
-                      <img src="images/search.svg" alt="" />
-                    </button>
-                  </div>
+              <h1 class="logo-header">
+                <a href="/" class="logo">ConcertVibe</a>
+              </h1>
+              <!--Search content-->
+              <div id="search-box">
+                <div id="dialog">
+                  <input id="q" name="q" placeholder="Search for a band that's touring..." type="text" value="">
+                  <button id="search-btn" class="search btn primary" name="" type="submit" value="Go">
+                    <img src="images/search.svg" class="svg" alt="search" />
+                  </button>
                 </div>
-            </div>
+              </div>
           </div>
         <!--Body content-->
         <div id="map" style="position:absolute; top:0; bottom:0; width:100%;"></div>
