@@ -13,6 +13,7 @@ body {
 	height:100%;
 	font-family: 'Droid Sans', sans-serif;
 	color: #3A3A3A;
+	overflow-x: hidden;
 }
 
 table {
@@ -281,6 +282,7 @@ left: 50%;
 margin-left: -333.5px; /*667/2*/
 padding: 15px;
 color: #000;
+min-width: 697px;
 }
 
 #header.header-bar h1 {
