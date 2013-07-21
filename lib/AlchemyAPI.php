@@ -26,9 +26,6 @@ class AlchemyAPI
 		$text_blog = '';
 		$response=$this->GetTextFromTwitter($band,$city,$lat,$lng);
 		
-		print_r($response);
-		die();
-		
 		if(!empty($response->statuses)){
 			foreach($response->statuses as $status){
 			
