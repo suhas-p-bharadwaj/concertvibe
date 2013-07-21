@@ -19,7 +19,7 @@
   <script type="text/javascript" src="https://www.rdio.com/media/fresh/now/api-helper.js"></script>
 </head>
     <link href='httxp://api.tiles.mapbox.com/mapbox.js/v1.3.0/mapbox.ie.css' rel='stylesheet' >
-    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>  
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
  </head>
   <body>
     <div class="container-fluid">
@@ -33,7 +33,7 @@
                 <!--Search content-->
                 <div id="search-box">
                   <div id="dialog">
-                    <input id="q" name="q" placeholder="Search for your a band" type="text" value="Phish">
+                    <input id="q" name="q" placeholder="Search for a band that's touring..." type="text" value="">
                     <button id="search-btn" class="search btn primary" name="" type="submit" value="Go">
                       <img src="images/search.svg" alt="" />
                     </button>
@@ -43,9 +43,9 @@
           </div>
         <!--Body content-->
         <div id="map" style="position:absolute; top:0; bottom:0; width:100%;"></div>
-        
+
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar off">
           <!-- HTML for FED formatting, CLEAR WHEN API IS WORKIN' -->
           <div class="concert-meta leaflet-popup-content-wrapper">
             <h3>When and where</h3>
@@ -71,7 +71,7 @@
                 <p class="twitter-tweet">I fell asleep in the venue bathroom, woke up with a needle in me.</p>
               </div>
           </div>
-          
+
           <div class="leaflet-popup-content-wrapper">
             <div class="marker-description">
               <h3>Setlist</h3>
@@ -110,7 +110,7 @@
                </ol>
             </div>
           </div>
-          
+
           <div class="leaflet-popup-content-wrapper">
               <a href="#"><h3 class="about-header">About</h3></a>
               <p class="about-section">
@@ -122,15 +122,15 @@
     </div>
 
     <div id="rdio-api"></div>
-    
+
     <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
 
     <script src="//www.rdio.com/api/api.js?client_id=ToUS9OYepTGDQ6fRIUJn7A"></script>
-        
+
     <script src="/js/bootstrap.js"></script>
     <script src="/js/map.js"></script>
-  
+
   </body>
 
   </div>
