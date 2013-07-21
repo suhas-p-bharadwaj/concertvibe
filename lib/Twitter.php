@@ -135,7 +135,7 @@ class Twitter
         }
     }
      
-    public function Search($band,$lat=null,$lng=null)
+    public function Search($band,$lat=null,$lng=null,$date=true)
     {
         require_once 'Zend/Oauth/Consumer.php';
          
@@ -143,9 +143,14 @@ class Twitter
             $httpClient = $this->accessToken->getHttpClient(self::getOptions());
             $httpClient->setUri(self::SCOPE.'search/tweets.json');
             $httpClient->setParameterGet('q',$band);
-            if(!empty($lat) && !empty($lng))
+            /*
+if(!empty($lat) && !empty($lng))
 	            $httpClient->setParameterGet('geocode',$lat.','.$lng);
-            //$httpClient->setParameterGet('until',date('Y-m-d',strtotime('-12 days')));
+*/
+	        /*
+if($date)
+	            $httpClient->setParameterGet('until',date('Y-m-d',strtotime('-12 days')));
+*/
             $httpClient->setMethod(Zend_Http_Client::GET);
              
         try{
@@ -158,6 +163,10 @@ class Twitter
         {
              
         }
+        /*
+if(empty($content) && $date==true)
+        	$this->Search($band,$lat,$lng,false);
+*/
          
         if(!empty($content))
             return json_decode($content);

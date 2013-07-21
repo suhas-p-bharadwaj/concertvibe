@@ -97,7 +97,7 @@ function Setlists(query){
                     features: mapLayers
                 });
                 $('.miles-past').html(Math.round(distance_sl*0.621371)+' miles');
-                $('.cover').tooltip();
+                $('a.cover').tooltip();
                 DrawPolyLine();
             } else {
                 DrawPolyLine();

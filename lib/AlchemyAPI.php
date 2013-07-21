@@ -73,13 +73,14 @@ class AlchemyAPI
 	private function GetTextFromTwitter($band,$city='',$lat='',$lng=''){
 		$twitter=new Twitter();
 		$twitter->setAccessToken();		
-		$response=$twitter->Search($band,$lat,$lng);
-		if(empty($response->statuses)){
+		$response=array();
+		//$response=$twitter->Search($band,$lat,$lng);
+		//if(empty($response->statuses)){
 			 $response=$this->GetTextFromTwitter($band.'+'.$city);
 			 if(empty($response->statuses)){
 				 $response=$this->GetTextFromTwitter($band);
 			 }
-		}	
+		//}	
         return $response;
 	}
 	
