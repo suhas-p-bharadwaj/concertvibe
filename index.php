@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=7,IE=9">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 
-  <title>ConcertVibe</title>
+  <title>ConcertVibe <?=isset($_GET['q'])?' | '.$_GET['q']:'';?></title>
 
   <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -58,7 +58,7 @@
           <div class="leaflet-popup-content-wrapper">
               <a href="#"><h3 class="about-header">About</h3></a>
               <p class="about-section">
-              	Special thanks for <a href="http://twitter.com#musichackday">#musichackday</a> and the following APIs:
+              	Special thanks to <a href="http://twitter.com#musichackday">#musichackday</a> and the following APIs:
                 <ul>
 	                <li>Rdio API</li>
 	                <li>Alchemy API</li>

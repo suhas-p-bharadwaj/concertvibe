@@ -69,15 +69,15 @@ function EchoNest(loc){
 	    $.getJSON('/tools/echonest.php',{location:loc},
         function(data) {
 
-            if(data && typeof data.response != 'undefined' && data.response.artists.length > 0){
+            if(data && typeof data.response != 'undefined' && data.response.artists && data.response.artists.length > 0){
 	            var html='<div class="leaflet-popup-content-wrapper"><h3>Artists from '+loc+'</h3><ol>';
             	$.each(data.response.artists,function(){
                 	html+='<li><a href="#" class="rdio-play artist-only">'+this.name+'</a></li>';
                 });
                 html+='</ol></div>';
                 $('.sidebar #content').append(html);
-                $('#song-progress.progress .bar').css('width','100%').fadeOut();
             } 
+            $('#song-progress.progress .bar').css('width','100%').fadeOut();
         },'jsonp');
 }
 
@@ -128,9 +128,9 @@ function GetSentiment(query,loc,lat,lng){
 				updateVibeImages();
 				
 				var sentiment = '<div><h4>Show Vibe</h4><div id="alchemy" class="progress">\
-				  <div class="bar bar-success" data-toggle="tooltip" style="width: '+Math.round((data.types['positive']/data.results.length)*100)+'%;" title="Good Vibes: '+Math.round((data.types['positive']/data.results.length)*100)+'%"></div>\
-				  <div class="bar bar-info" data-toggle="tooltip" style="width: '+Math.round((data.types['neutral']/data.results.length)*100)+'%;" title="Neutral Vibes:'+Math.round((data.types['neutral']/data.results.length)*100)+'%"></div>\
-				  <div class="bar bar-danger" data-toggle="tooltip" style="width: '+Math.round((data.types['negative']/data.results.length)*100)+'%;" title="Bad Vibes:'+Math.round((data.types['negative']/data.results.length)*100)+'%"></div>\
+				  <div class="bar bar-success" data-toggle="tooltip" style="width: '+Math.round((data.types['positive']/data.results.length)*100,2)+'%;" title="Good Vibes: '+Math.round((data.types['positive']/data.results.length)*100,2)+'%"></div>\
+				  <div class="bar bar-info" data-toggle="tooltip" style="width: '+Math.round((data.types['neutral']/data.results.length)*100,2)+'%;" title="Neutral Vibes: '+Math.round((data.types['neutral']/data.results.length)*100,2)+'%"></div>\
+				  <div class="bar bar-danger" data-toggle="tooltip" style="width: '+Math.round((data.types['negative']/data.results.length)*100,2)+'%;" title="Bad Vibes: '+Math.round((data.types['negative']/data.results.length)*100,2)+'%"></div>\
 				</div></div>';				
 				$('.marker-info #alchemy').parent().remove();
 				$('.marker-info').append(sentiment);
