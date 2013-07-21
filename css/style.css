@@ -1236,6 +1236,23 @@ padding:3px 15px
 	margin-bottom: 8px
 }
 
+.twitter-face {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.twitter-info {
+	margin-bottom: 2px;
+}
+
+.twitter-tweet {
+	padding: 4px 0;
+	font-size: 14px;
+	font-style: italic;
+	line-height: 19px;
+	margin-bottom: 16px;
+}
+
 .face-happy path {
 	stroke: green;
 }
@@ -1246,6 +1263,12 @@ padding:3px 15px
 
 .face-neutral path {
 	stroke: gray;
+}
+
+.twitter-handle {
+	text-decoration: none;
+	display: inline-block;
+	vertical-align:middle;
 }
 
 .marker-place {
@@ -1261,7 +1284,7 @@ padding:3px 15px
   font-weight: bold;
   border-bottom: 1px dashed #ccc;
   padding-bottom: 4px;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
 }
 
 .sidebar h4 {

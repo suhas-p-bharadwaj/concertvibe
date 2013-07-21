@@ -49,9 +49,21 @@
           <!-- COPIED HTML for FED formatting, CLEAR WHEN API IS WORKIN' -->
           <div class="leaflet-popup-content-wrapper">
             <h3>Audience reaction</h3>
-              <img src="images/happy.svg" class="svg face-happy" alt="They sucked.">
-              <img src="images/neutral.svg" class="svg face-neutral" alt="They sucked.">
-              <img src="images/sad.svg" class="svg face-sad" alt="They sucked.">
+              <div>
+                <img src="images/happy.svg" class="svg face-happy twitter-face" alt="They sucked.">
+                <a href="TWITTER_HANDLE" class="twitter-handle">@asshole</a href="TWITTER_HANDLE">
+                <p class="twitter-tweet">So good. So goooooood.</p>
+              </div>
+              <div>
+                <img src="images/neutral.svg" class="svg face-neutral twitter-face" alt="They sucked.">
+                <a href="TWITTER_HANDLE" class="twitter-handle">@mehIdontknow</a href="TWITTER_HANDLE">
+                <p class="twitter-tweet">Unimpressed. I must say.</p>
+              </div>
+              <div>
+                <img src="images/sad.svg" class="svg face-sad twitter-face" alt="They sucked.">
+                <a href="TWITTER_HANDLE" class="twitter-handle">@thiswasmyfirstshow</a href="TWITTER_HANDLE">
+                <p class="twitter-tweet">I fell asleep in the venue bathroom, woke up with a needle in me.</p>
+              </div>
           </div>
           <div class="concert-meta leaflet-popup-content-wrapper">
             <h3>When and where</h3>
