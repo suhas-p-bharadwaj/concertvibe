@@ -34,7 +34,7 @@
               <div id="search-box">
                 <div id="dialog">
                   <input id="q" name="q" placeholder="Search for a band that's touring..." type="text" value="<?=isset($_GET['q'])?$_GET['q']:''?>">
-                  <button id="search-btn" class="search btn primary" name="" type="submit" value="Go">
+                  <button id="search-btn" class="search" name="" type="submit" value="Go">
                     <img src="images/search.svg" class="svg" alt="search" />
                   </button>
                 </div>
