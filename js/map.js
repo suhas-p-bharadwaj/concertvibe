@@ -56,7 +56,7 @@ function JamBaseEvents(query,artistId){
                     type: 'FeatureCollection',
                     features: mapLayers
                 });
-                $('.miles-up').html(Math.round(distance_jb*0.621371)+' miles');
+                $('.miles-up').html(Math.round(distance_jb*0.621371)+' miles to go');
                 Setlists(query);
             } else {
                 Setlists(query);
@@ -96,7 +96,7 @@ function Setlists(query){
                     type: 'FeatureCollection',
                     features: mapLayers
                 });
-                $('.miles-past').html(Math.round(distance_sl*0.621371)+' miles');
+                $('.miles-past').html(Math.round(distance_sl*0.621371)+' miles so far');
                 $('a.cover').tooltip();
                 DrawPolyLine();
             } else {
@@ -108,12 +108,12 @@ function Setlists(query){
 
 function GetSentiment(query,loc,lat,lng){
 		
-		var sentiment = '<div class="leaflet-popup-content-wrapper"><h4>Show Vibe</h4><div id="alchemy" class="progress progress-striped"><div class="bar bar-success" data-toggle="tooltip" style="width: 33.33%">Getting</div><div class="bar bar-info" data-toggle="tooltip" style="width: 33.33%">the</div><div class="bar bar-danger" data-toggle="tooltip" style="width: 33.33%">Vibe</div></div></div>';				
+		var sentiment = '<div><h4>Show Vibe</h4><div id="alchemy" class="progress progress-striped"><div class="bar bar-success" data-toggle="tooltip" style="width: 33.33%">Getting</div><div class="bar bar-info" data-toggle="tooltip" style="width: 33.33%">the</div><div class="bar bar-danger" data-toggle="tooltip" style="width: 33.33%">Vibe</div></div></div>';				
 				$('.marker-info').append(sentiment);
 
 	    $.getJSON('/tools/alchemy.php',{name:query,loc:loc,lat:lat,lng:lng},
         function(data) {
-            var html = '<div class="leaflet-popup-content-wrapper"><h3>Show Vibe</h3>';
+            var html = '<div><h3>Show Vibe</h3>';
             
             if(data.results && data.results.length>0){
 				$.each(data.results,function(){
