@@ -18,32 +18,27 @@
     <![endif]-->
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>  </head>
   <body>
-
     <div class="container-fluid">
       <div class="row-fluid">
           <!--Nav content-->
             <div class="header-bar" id="header">
               <div class="header-container">
-                <h1 class="span2">
+                <h1 class="logo-header">
                   <a href="/" class="logo">ConcertVibe</a>
                 </h1>
                 <!--Search content-->
-                <div id="search-box" class="span8" >
+                <div id="search-box">
                   <div id="dialog">
-                    <input id="q" name="q" placeholder="Enter a band" type="text" value="Phish">
-                    <input id="search-btn" class="search btn primary" name="" type="submit" value="Go">
+                    <input id="q" name="q" placeholder="Search for your a band" type="text" value="Phish">
+                    <button id="search-btn" class="search btn primary" name="" type="submit" value="Go">
+                      <img src="images/search.svg" alt="" />
+                    </button>
                   </div>
                 </div>
-
-                <nav id="secondary-menu" class="span2">
-                  <ul class="clearfix">
-                    <li><a href="#"><div class="main-text nav-link">About Us</div></a></li>
-                  </ul>
-                </nav>
             </div>
           </div>
         <!--Body content-->
-        <div id="map" style="position:absolute; top:60px; bottom:0; width:100%;"></div>
+        <div id="map" style="position:absolute; top:0; bottom:0; width:100%;"></div>
         <!-- Sidebar -->
         <div class="sidebar">
           <!-- HTML for FED formatting, CLEAR WHEN API IS WORKIN' -->
@@ -108,6 +103,12 @@
                   <li>Tweezer Reprise <a class="rdio-play"></a></li>
                </ol>
             </div>
+          </div>
+          <div class="leaflet-popup-content-wrapper">
+              <a href="#"><h3 class="about-header">About</h3></a>
+              <p class="about-section">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, commodi, harum, atque quasi saepe provident placeat blanditiis quos minus nihil sed maiores aliquid temporibus nobis non! Iure consequuntur laudantium quam?
+              </p>
           </div>
         </div>
       </div>
