@@ -3,4 +3,4 @@ DirectoryIndex  index.php
 Options -Indexes
 RewriteBase /
 
-RewriteRule ^([a-zA-Z0-9_-]+)/?$                                   index.php?q=$1  [QSA,L,NC]
+RewriteRule ^([a-zA-Z0-9_-\s]+)/?$                                   index.php?q=$1  [QSA,L,NC]

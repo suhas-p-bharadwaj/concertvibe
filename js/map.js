@@ -65,18 +65,18 @@ function JamBaseEvents(query,artistId){
 }
 
 function EchoNest(loc){
-		$('#song-progress.progress .bar').show().css('width','40%').find('.what').html('Getting the EchoNest...');
+		$('#song-progress.progress .bar').show().css('width','60%').find('.what').html('Getting the EchoNest...');
 	    $.getJSON('/tools/echonest.php',{location:loc},
         function(data) {
 
             if(data && typeof data.response != 'undefined' && data.response.artists.length > 0){
-	            var html='<ol>';
-            	$('.sidebar #content').append('<h3>Artists from '+loc+'</h3>');
-                $.each(data.response.artists,function(){
+	            var html='<div class="leaflet-popup-content-wrapper"><h3>Artists from '+loc+'</h3><ol>';
+            	$.each(data.response.artists,function(){
                 	html+='<li><a href="#" class="rdio-play artist-only">'+this.name+'</a></li>';
                 });
-                html+='</ol>';
+                html+='</ol></div>';
                 $('.sidebar #content').append(html);
+                $('#song-progress.progress .bar').css('width','100%').fadeOut();
             } 
         },'jsonp');
 }
@@ -107,10 +107,13 @@ function Setlists(query){
 
 
 function GetSentiment(query,loc,lat,lng){
-		$('#song-progress.progress .bar').show().css('width','60%').find('.what').html('Getting the Vibe...');
+		
+		var sentiment = '<div class="leaflet-popup-content-wrapper"><h4>Show Vibe</h4><div id="alchemy" class="progress progress-striped"><div class="bar bar-success" data-toggle="tooltip" style="width: 33.33%">Getting</div><div class="bar bar-info" data-toggle="tooltip" style="width: 33.33%">the</div><div class="bar bar-danger" data-toggle="tooltip" style="width: 33.33%">Vibe</div></div></div>';				
+				$('.marker-info').append(sentiment);
+
 	    $.getJSON('/tools/alchemy.php',{name:query,loc:loc,lat:lat,lng:lng},
         function(data) {
-            var html = '<h3>Show Vibe</h3>';
+            var html = '<div class="leaflet-popup-content-wrapper"><h3>Show Vibe</h3>';
             
             if(data.results && data.results.length>0){
 				$.each(data.results,function(){
@@ -120,15 +123,16 @@ function GetSentiment(query,loc,lat,lng){
 	                <p class="twitter-tweet">'+this.text+'</p>\
 	              </div>';              
 				});
-				$('#song-progress.progress .bar').css('width','100%').fadeOut();
+				html += '</div>';
 				$('.sidebar #content').append(html);
 				updateVibeImages();
 				
-				var sentiment = '<div><h4>Show Vibe</h4><div class="progress">\
+				var sentiment = '<div class="leaflet-popup-content-wrapper"><h4>Show Vibe</h4><div id="alchemy" class="progress">\
 				  <div class="bar bar-success" data-toggle="tooltip" style="width: '+Math.round((data.types['positive']/data.results.length)*100)+'%;" title="Good Vibes: '+Math.round((data.types['positive']/data.results.length)*100)+'%"></div>\
 				  <div class="bar bar-info" data-toggle="tooltip" style="width: '+Math.round((data.types['neutral']/data.results.length)*100)+'%;" title="Neutral Vibes:'+Math.round((data.types['neutral']/data.results.length)*100)+'%"></div>\
 				  <div class="bar bar-danger" data-toggle="tooltip" style="width: '+Math.round((data.types['negative']/data.results.length)*100)+'%;" title="Bad Vibes:'+Math.round((data.types['negative']/data.results.length)*100)+'%"></div>\
 				</div></div>';				
+				$('.marker-info #alchemy').parent().remove();
 				$('.marker-info').append(sentiment);
 				$('.bar').tooltip();
 			}
@@ -144,7 +148,7 @@ function addPOI_JB(poi){
 	$('.sidebar #content').append('<div class="marker-place">'+poi.Date+' '+poi.Venue.City+', '+poi.Venue.State+'</div>');
 	
 	function getDesc(poi){
-		var html ='<div class="marker-info"><h3>Show Info</h3><div class="concert-meta">\
+		var html ='<div class="marker-info leaflet-popup-content-wrapper"><h3>Show Info</h3><div class="concert-meta">\
             <div class="marker-date">'+poi.Date+'</div>\
             <div class="marker-place">'+poi.Venue.City+', '+poi.Venue.State+'</div>\
             <div class="marker-title">'+poi.Venue.Name+'</div>\
@@ -189,14 +193,14 @@ function addPOI_SL(poi){
 	
 	function getDesc(poi){
 		
-		var html ='<div class="marker-info"><h3>Show Info</h3><div class="concert-meta">\
+		var html ='<div class="marker-info leaflet-popup-content-wrapper"><h3>Show Info</h3><div class="concert-meta">\
             <div class="marker-date">'+poi.Date+'</div>\
             <div class="marker-place">'+poi.venue.city['@name']+', '+poi.venue.city['@stateCode']+'</div>\
             <div class="marker-title">'+poi.venue['@name']+'</div>\
           </div></div>';
           
 	    if(poi.sets != "" && typeof poi.sets.set != 'undefined'){
-	    	html += '<div class="hide marker-description">\
+	    	html += '<div class="hide marker-description leaflet-popup-content-wrapper">\
               <h3>Setlist</h3>';
               
 		    $.each(poi.sets.set,function(){
@@ -315,7 +319,7 @@ jQuery('img.svg').each(function(){
 
 function updatePlaying(result){
 	console.log(result);
-	$('#player').empty().css('border-bottom','1px dotted balck').append('<h3>Now Playing</h3><img src="'+result.icon+'"/><br/>Artist: '+result.artist+'<br/>Album: '+result.album+'<br/>Song: '+result.name+'<h3>&nbsp;</h3>');
+	$('#player').empty().css('border-bottom','1px dotted balck').append('<div class="leaflet-popup-content-wrapper"><h3>Now Playing</h3><img src="'+result.icon+'"/><br/>Artist: '+result.artist+'<br/>Album: '+result.album+'<br/>Song: '+result.name+'<h3>&nbsp;</h3></div>');
 	songDuration=result.duration;
 	$('#song-progress.progress .bar').show().css({'width':'0%','color':'#000','text-align':'right'}).show().find('.what').html('Playing '+result.name);
 }
@@ -390,7 +394,8 @@ $( document ).ready(function() {
 
     $('#search-btn').on('click',function() {
         if($('#q').val()!=''){
-        	document.location.href='/'+$('#q').val();
+        	document.location.href='/'+encodeURIComponent($('#q').val());
+        	
         }
     });
     
