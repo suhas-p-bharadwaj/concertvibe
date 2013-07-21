@@ -1,26 +1,9 @@
 var current = {lat: 39.7392, lng: -104.9842};
 var mapLayers = [];
-//var map = L.mapbox.map('map', 'viceco.map-okwvdt12');
 var map = L.mapbox.map('map', 'avantassel.map-6y8nsvv5').setView([current.lat,current.lng], 5);
 var markerLayer = L.mapbox.markerLayer(mapLayers).addTo(map);
-
-function getCraft(){
-    var found=false;
-    $.each(crafts,function(){
-        if(this.name==current.craft)
-            found=this;
-    });
-    return found;
-}
-
-function LoadCraft(craftName){
-    var craft = getCraft();
-    if(craft && craft.fs==true) {
-        LoadFoursquare(craft);
-    } else if(craft) {
-        LoadMongo(craft);
-    }
-}
+var eventList = [];
+var distance = 0;
 
 function clearLayer(layerName){
     mapLayers=[];
@@ -36,7 +19,7 @@ function JamBaseSearch(query){
     $.getJSON('/tools/jambase.php',{artist:true,name:query}, 
         function(data) {
             if(typeof data.Artists != 'undefined'){
-                JamBaseEvents(data.Artists[0].Id);
+                JamBaseEvents(query,data.Artists[0].Id);
             } else {
                 //sad path
             }
@@ -44,7 +27,7 @@ function JamBaseSearch(query){
 
 }
 
-function JamBaseEvents(artistId){
+function JamBaseEvents(query,artistId){
 	    $.getJSON('/tools/jambase.php',{events:true,artistId:artistId}, 
         function(data) {
             
@@ -56,7 +39,8 @@ function JamBaseEvents(artistId){
                 markerLayer.setGeoJSON({
                     type: 'FeatureCollection',
                     features: mapLayers
-                });
+                });     
+                Setlists(query);            
             } else {
                 //sad path
             }
@@ -76,9 +60,19 @@ function Setlists(query){
                     type: 'FeatureCollection',
                     features: mapLayers
                 });
+                DrawPolyLine();
             } else {
                 //sad path
             }
+        },'jsonp');
+}
+
+function GetSentiment(query,lat,lng){
+	    $.getJSON('/tools/alchemy.php',{name:query,lat:lat,lng:lng}, 
+        function(data) {
+            
+            console.log(data);
+            
         },'jsonp');
 }
 
@@ -86,6 +80,8 @@ function addPOI_JB(poi){
 	
 	function getDesc(poi){
 	    var html='<p>';
+	    html += 'Sentiment: ';
+	    
 	    if(typeof poi.Venue.Address != 'undefined'){
 	        if(poi.Venue.Address)
 	            html+='<br/>'+poi.Venue.Address;
@@ -94,12 +90,17 @@ function addPOI_JB(poi){
 	    html += '</p>';
 	    return html;
 	}
-
+	
+	if(eventList.length > 0)
+		distance+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.Venue.Latitude),parseInt(poi.Venue.Longitude));
+		
+	eventList.push([parseFloat(poi.Venue.Latitude),parseFloat(poi.Venue.Longitude)]);
+		
     mapLayers.push({
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: [poi.Venue.Longitude,poi.Venue.Latitude]
+            coordinates: [parseFloat(poi.Venue.Longitude),parseFloat(poi.Venue.Latitude)]
         },
         properties: {
             'title': poi.Venue.Name+' on '+poi.Date,
@@ -125,21 +126,26 @@ function addPOI_SL(poi){
 		    	html += '<div><b>'+this['@name']+'</b></div>';
 			   $.each(this.song,function(){
 			   	  if(!this.cover)
- 			   	  	  html += '<li>'+this['@name']+' <span class="rdio-play"></span></li>'; 	
+ 			   	  	  html += '<li>'+this['@name']+' <a href="#" class="rdio-play"></a></li>'; 	
 			   	  else
-					  html += '<li>'+this['@name']+' <b>*</b> <span class="rdio-play"></span></li>'; 
+					  html += '<li>'+this['@name']+' <b>*</b> <a href="#" class="rdio-play"></a></li>'; 
 			   }); 
 			   html += '</ul>';
 		    });
 	    }
 	    return html;
 	}
-
+	
+	if(eventList.length > 0)
+		distance+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.venue.city.coords['@lat']),parseInt(poi.venue.city.coords['@long']));
+		
+	eventList.push([parseFloat(poi.venue.city.coords['@lat']),parseFloat(poi.venue.city.coords['@long'])]);
+		
     mapLayers.push({
         type: 'Feature',
         geometry: {
             type: 'Point',
-            coordinates: [poi.venue.city.coords['@long'],poi.venue.city.coords['@lat']]
+            coordinates: [parseFloat(poi.venue.city.coords['@long']),parseFloat(poi.venue.city.coords['@lat'])]
         },
         properties: {
             'title': poi.venue['@name']+' on '+poi['@eventDate'],
@@ -152,13 +158,50 @@ function addPOI_SL(poi){
     $('.poi-list').append('<li>'+getDesc(poi)+'</li>');
 }
 
+function getDistance(miles){
+	if(miles)
+		return distance*0.621371;
+	else
+		return distance;
+}
+
+function DrawPolyLine(){	
+	if(eventList){
+		var polyline = L.polyline(eventList,{color:'#115e67',weight:2,opacity:1,smoothFactor:10}).addTo(map);
+		//zoom to bounds
+    	map.fitBounds(polyline.getBounds());	
+    }
+}
+
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
 $( document ).ready(function() {
 	
     $('#search-btn').on('click',function() {
         if($('#q').val()!=''){
         	clearLayer();        
-	        JamBaseSearch($('#q').val());
-            Setlists($('#q').val());
+	        JamBaseSearch($('#q').val());                       
         }
+    });
+    
+    $('.rdio-play').on('click',function(){
+    	$('#rdio-api').rdio().play('a997982');
+	    return false;
     });
 });

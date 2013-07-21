@@ -47,7 +47,7 @@ class SetListFM
 		$httpClient->setMethod(Zend_Http_Client::GET);
 		$httpClient->setUri(self::SCOPE.'/search/setlists.json');
 		$httpClient->setParameterGet('artistName',$name);
-		$httpClient->setParameterGet('api_key',self::API_KEY);
+		//$httpClient->setParameterGet('api_key',self::API_KEY);
 				
 		try{
 			//get the raw data

@@ -66,10 +66,11 @@
         </div>        
       </div>
     </div>
+    <div id="rdio-api"></div>
     
-    
+    <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
-    <script src="https://raw.github.com/rdio/jquery.rdio.js/master/jquery.rdio.min.js" ></script>
+    <script src="/js/jquery.rdio.min.js" ></script>
         
     <script src="/js/bootstrap.js"></script>
     <script src="/js/map.js"></script>
