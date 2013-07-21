@@ -29,7 +29,7 @@ function JamBaseSearch(query){
 }
 
 function JamBaseEvents(query,artistId){
-	    $.getJSON('/tools/jambase.php',{events:true,artistId:artistId}, 
+	    $.getJSON('/tools/jambase.php',{events:true,artistId:artistId},
         function(data) {
 
             if(typeof data.Events != 'undefined'){
@@ -40,8 +40,8 @@ function JamBaseEvents(query,artistId){
                 markerLayer.setGeoJSON({
                     type: 'FeatureCollection',
                     features: mapLayers
-                });     
-                Setlists(query);            
+                });
+                Setlists(query);
             } else {
                 //sad path
             }
@@ -69,11 +69,11 @@ function Setlists(query){
 }
 
 function GetSentiment(query,lat,lng){
-	    $.getJSON('/tools/alchemy.php',{name:query,lat:lat,lng:lng}, 
+	    $.getJSON('/tools/alchemy.php',{name:query,lat:lat,lng:lng},
         function(data) {
-            
+
             console.log(data);
-            
+
         },'jsonp');
 }
 
@@ -82,7 +82,7 @@ function addPOI_JB(poi){
 	function getDesc(poi){
 	    var html='<p>';
 	    html += 'Sentiment: ';
-	    
+
 	    if(typeof poi.Venue.Address != 'undefined'){
 	        if(poi.Venue.Address)
 	            html+='<br/>'+poi.Venue.Address;
@@ -91,12 +91,12 @@ function addPOI_JB(poi){
 	    html += '</p>';
 	    return html;
 	}
-	
+
 	if(eventList.length > 0)
 		distance+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.Venue.Latitude),parseInt(poi.Venue.Longitude));
-		
+
 	eventList.push([parseFloat(poi.Venue.Latitude),parseFloat(poi.Venue.Longitude)]);
-		
+
     mapLayers.push({
         type: 'Feature',
         geometry: {
@@ -123,30 +123,30 @@ function addPOI_SL(poi){
 	    var sets=0;
 	    if(typeof poi.sets.set != 'undefined'){
 		    $.each(poi.sets.set,function(){
-		    	html += '<ul>';		    	
+		    	html += '<ul>';
 		    	if(sets>=2)
 			    	html += '<div><b>Encore</b></div>';
 		    	else
 		    		html += '<div><b>'+this['@name']+'</b></div>';
-		    		
+
 			   $.each(this.song,function(){
 			   	  if(!this.cover)
- 			   	  	  html += '<li>'+this['@name']+' <a href="#" class="rdio-play" data-track="'+this['@name']+'"></a></li>'; 	
+ 			   	  	  html += '<li>'+this['@name']+' <a href="#" class="rdio-play" data-track="'+this['@name']+'"></a></li>';
 			   	  else
-					  html += '<li class="cover" data-artist="'+this.cover['@name']+'">'+this['@name']+' <b>*</b> <a href="#" class="rdio-play" data-track="'+this['@name']+'"></a></li>'; 
-			   }); 
-			   html += '</ul>'; 
+					  html += '<li class="cover" data-artist="'+this.cover['@name']+'">'+this['@name']+' <b>*</b> <a href="#" class="rdio-play" data-track="'+this['@name']+'"></a></li>';
+			   });
+			   html += '</ul>';
 			   sets++;
 		    });
 	    }
 	    return html;
 	}
-	
+
 	if(eventList.length > 0)
 		distance+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.venue.city.coords['@lat']),parseInt(poi.venue.city.coords['@long']));
-		
+
 	eventList.push([parseFloat(poi.venue.city.coords['@lat']),parseFloat(poi.venue.city.coords['@long'])]);
-		
+
     mapLayers.push({
         type: 'Feature',
         geometry: {
@@ -171,24 +171,24 @@ function getDistance(miles){
 		return distance;
 }
 
-function DrawPolyLine(){	
+function DrawPolyLine(){
 	if(eventList){
 		var polyline = L.polyline(eventList,{color:'#115e67',weight:2,opacity:1,smoothFactor:10}).addTo(map);
 		//zoom to bounds
-    	map.fitBounds(polyline.getBounds());	
+    	map.fitBounds(polyline.getBounds());
     }
 }
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
-  var a = 
+  var dLon = deg2rad(lon2-lon1);
+  var a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
     Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var d = R * c; // Distance in km
   return d;
 }
@@ -232,18 +232,18 @@ $( document ).ready(function() {
 
     $('#search-btn').on('click',function() {
         if($('#q').val()!=''){
-        	clearLayer();        
-	        JamBaseSearch($('#q').val());                       
+        	clearLayer();
+	        JamBaseSearch($('#q').val());
         }
     });
-    
+
     $('.rdio-play').on('click',function(){
     	var track=$(this).data('track');
     	R.ready(function() { // just in case the API isn't ready yet
               R.request({
-		        method: "search", 
+		        method: "search",
 		        content: {
-		          artist: $('#q').val(), 
+		          artist: $('#q').val(),
 		          name: track,
 		          types: "Track"
 		        },

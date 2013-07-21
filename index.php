@@ -21,7 +21,7 @@
     <link href='httxp://api.tiles.mapbox.com/mapbox.js/v1.3.0/mapbox.ie.css' rel='stylesheet' >
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
  </head>
-  <body>
+  <body class="results">
     <div class="container-fluid">
       <div class="row-fluid">
           <!--Nav content-->
