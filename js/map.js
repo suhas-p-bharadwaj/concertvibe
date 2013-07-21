@@ -5,6 +5,7 @@ var map = L.mapbox.map('map', 'avantassel.map-6y8nsvv5').setView([current.lat,cu
 var centered = false;
 var markerLayer = L.mapbox.markerLayer(mapLayers).addTo(map);
 var distance_jb = 0, distance_sl = 0, lastTrack ='';
+var songDuration;
 
 function clearLayer(layerName){
     mapLayers=[];
@@ -12,6 +13,7 @@ function clearLayer(layerName){
     DrawPolyLine();
     $('.poi-list').empty();
     $('.sidebar #content').empty();
+    $('.progress .bar').css('width','0%');
     markerLayer.setGeoJSON({
         type: 'FeatureCollection',
         features: mapLayers
@@ -19,7 +21,9 @@ function clearLayer(layerName){
 }
 
 function JamBaseSearch(query){
-
+	
+	$('.progress .bar').css('width','20%');
+	
     $.getJSON('/tools/jambase.php',{artist:true,name:query},
         function(data) {
             if(data && typeof data.Artists != 'undefined' && data.Artists.length > 0){
@@ -38,6 +42,7 @@ function JamBaseSearch(query){
 }
 
 function JamBaseEvents(query,artistId){
+		$('.progress .bar').css('width','40%').find('.what').html('Getting the Events...');
 	    $.getJSON('/tools/jambase.php',{events:true,artistId:artistId},
         function(data) {
 
@@ -60,6 +65,7 @@ function JamBaseEvents(query,artistId){
 }
 
 function EchoNest(loc){
+		$('.progress .bar').show().css('width','40%').find('.what').html('Getting the EchoNest...');
 	    $.getJSON('/tools/echonest.php',{location:loc},
         function(data) {
 
@@ -76,6 +82,7 @@ function EchoNest(loc){
 }
 
 function Setlists(query){
+		$('.progress .bar').css('width','60%').find('.what').html('Getting the Setlists...');
 	    $.getJSON('/tools/setlistfm.php',{events:true,name:query},
         function(data) {
 
@@ -90,6 +97,7 @@ function Setlists(query){
                     features: mapLayers
                 });
                 $('.miles-past').html(Math.round(distance_sl*0.621371)+' miles');
+                $('.cover').tooltip();
                 DrawPolyLine();
             } else {
                 DrawPolyLine();
@@ -97,19 +105,33 @@ function Setlists(query){
         },'jsonp');
 }
 
-function GetSentiment(query,lat,lng){
-	    $.getJSON('/tools/alchemy.php',{name:query,lat:lat,lng:lng},
+
+function GetSentiment(query,loc,lat,lng){
+		$('.progress .bar').show().css('width','60%').find('.what').html('Getting the Vibe...');
+	    $.getJSON('/tools/alchemy.php',{name:query,loc:loc,lat:lat,lng:lng},
         function(data) {
             var html = '<h3>Show Vibe</h3>';
             
-			$.each(data.results,function(){
-				html += '<div>\
-                <img src="images/'+this.type+'.svg" class="svg face-'+this.type+' twitter-face" alt="They rules.">\
-                <a href="http://twitter.com/'+this.screen_name+'" class="twitter-handle">@'+this.screen_name+'</a>\
-                <p class="twitter-tweet">'+this.text+'</p>\
-              </div>';              
-			});
-			$('.sidebar #content').append(html);
+            if(data.results && data.results.length>0){
+				$.each(data.results,function(){
+					html += '<div>\
+	                <img src="/images/'+this.type+'.svg" class="svg face-'+this.type+' twitter-face">\
+	                <a href="http://twitter.com/'+this.screen_name+'" class="twitter-handle">@'+this.screen_name+'</a>\
+	                <p class="twitter-tweet">'+this.text+'</p>\
+	              </div>';              
+				});
+				$('.progress .bar').css('width','100%').fadeOut();
+				$('.sidebar #content').append(html);
+				updateVibeImages();
+				
+				var sentiment = '<div><h4>Show Vibe</h4><div class="progress">\
+				  <div class="bar bar-success" data-toggle="tooltip" style="width: '+Math.round((data.types['positive']/data.results.length)*100)+'%;" title="Good Vibes: '+Math.round((data.types['positive']/data.results.length)*100)+'%"></div>\
+				  <div class="bar bar-info" data-toggle="tooltip" style="width: '+Math.round((data.types['neutral']/data.results.length)*100)+'%;" title="Neutral Vibes:'+Math.round((data.types['neutral']/data.results.length)*100)+'%"></div>\
+				  <div class="bar bar-danger" data-toggle="tooltip" style="width: '+Math.round((data.types['negative']/data.results.length)*100)+'%;" title="Bad Vibes:'+Math.round((data.types['negative']/data.results.length)*100)+'%"></div>\
+				</div></div>';				
+				$('.marker-info').append(sentiment);
+				$('.bar').tooltip();
+			}
 			
         },'jsonp');
 }
@@ -122,11 +144,11 @@ function addPOI_JB(poi){
 	$('.sidebar #content').append('<div class="marker-place">'+poi.Date+' '+poi.Venue.City+', '+poi.Venue.State+'</div>');
 	
 	function getDesc(poi){
-		var html ='<div class="concert-meta">\
+		var html ='<div class="marker-info"><h3>Show Info</h3><div class="concert-meta">\
             <div class="marker-date">'+poi.Date+'</div>\
             <div class="marker-place">'+poi.Venue.City+', '+poi.Venue.State+'</div>\
             <div class="marker-title">'+poi.Venue.Name+'</div>\
-          </div>';
+          </div></div>';
 	    return html;
 	}
 
@@ -165,11 +187,11 @@ function addPOI_SL(poi){
 	
 	function getDesc(poi){
 		
-		var html ='<div class="concert-meta">\
+		var html ='<div class="marker-info"><h3>Show Info</h3><div class="concert-meta">\
             <div class="marker-date">'+poi.Date+'</div>\
             <div class="marker-place">'+poi.venue.city['@name']+', '+poi.venue.city['@stateCode']+'</div>\
             <div class="marker-title">'+poi.venue['@name']+'</div>\
-          </div>';
+          </div></div>';
           
 	    if(poi.sets != "" && typeof poi.sets.set != 'undefined'){
 	    	html += '<div class="hide marker-description">\
@@ -190,7 +212,7 @@ function addPOI_SL(poi){
 				   	  if(!this.cover)
 	 			   	  	  html += '<li><a href="#" class="rdio-play">'+this['@name']+'</a></li>'; 	
 				   	  else
-						  html += '<li class="cover"><a href="#" class="rdio-play">'+this['@name']+'</a> <a href="#" class="cover" title="'+this.cover['@name']+'|'+this['@name']+'">*</a></li>'; 
+						  html += '<li class="cover"><a href="#" class="rdio-play">'+this['@name']+'</a> <a href="#" class="cover" data-toggle="tooltip" title="'+this.cover['@name']+'|'+this['@name']+'">*</a></li>'; 
 				   }); 
 			   }
 			   html += '</ol>'; 
@@ -234,6 +256,7 @@ function DrawPolyLine(){
     	map.fitBounds(polyline.getBounds());
     }
     centered=false;
+    $('.progress .bar').css('width','100%').fadeOut();
 }
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -257,6 +280,7 @@ function deg2rad(deg) {
 /*
  * Replace all SVG images with inline SVG
  */
+function updateVibeImages(){ 
 jQuery('img.svg').each(function(){
     var $img = jQuery(this);
     var imgID = $img.attr('id');
@@ -282,17 +306,25 @@ jQuery('img.svg').each(function(){
         // Replace image with new SVG
         $img.replaceWith($svg);
     });
-
 });
+}
 
 function updatePlaying(result){
+	console.log(result);
 	$('#player').empty().css('border-bottom','1px dotted balck').append('<h3>Now Playing</h3><img src="'+result.icon+'"/><br/>Artist: '+result.artist+'<br/>Album: '+result.album+'<br/>Song: '+result.name+'<h3>&nbsp;</h3>');
+	songDuration=result.duration;
+	$('.progress .bar').show().css({'width':'0%','color':'#000','text-align':'right'}).show().find('.what').html('Playing '+result.name);
 }
 function Rdio(self,song,artist){
 	
 	var ttype=(!song || song == '')?'Artist':'Track';
 	
-	R.ready(function() { 
+	R.ready(function() {
+	  R.player.on("change:position", function(newValue) {
+		  if(songDuration)
+			  $('.progress .bar').css('width',((newValue/songDuration)*100)+'%').find('.what').html(newValue+'/'+songDuration);
+  		});
+ 
       R.request({
         method: "search",
         content: {
@@ -331,7 +363,7 @@ function Rdio(self,song,artist){
 	          }, 1000);
 	          
           } else {
-	      	$('#player').empty().css('border-bottom','1px dotted balck').append('<h3>Now Playing</h3><img src="'+result.icon+'"/><br/>Artist: '+result.artist+'<br/>Album: '+result.album+'<br/>Song: '+result.name+'<h3>&nbsp;</h3>');    
+          	updatePlaying(result);
           }
           
           $(self).addClass('playing');          
@@ -348,9 +380,14 @@ $( document ).ready(function() {
 
     $('#search-btn').on('click',function() {
         if($('#q').val()!=''){
+        	$('.progress .bar').show().css('width','10%');
         	clearLayer();
 	        JamBaseSearch($('#q').val());
         }
+    });
+    
+    $('.progress .bar').on('click',function(){
+	    R.player.togglePause();
     });
     
     $('#q').on('keydown',function(e){
@@ -367,7 +404,7 @@ $( document ).ready(function() {
 	    var loc = $(content).find('.marker-place').html();
 	    if(loc)
 		    EchoNest(loc);
-		GetSentiment($('#q').val(),e.layer.feature.geometry.coordinates[1],e.layer.feature.geometry.coordinates[0]);
+		GetSentiment($('#q').val(),loc,e.layer.feature.geometry.coordinates[1],e.layer.feature.geometry.coordinates[0]);
 	    return false;	    
     });
     
@@ -380,6 +417,7 @@ $( document ).ready(function() {
     $('.sidebar #content').on('click','a.rdio-play',function(){
     	if($(this).hasClass('playing')){
 	    	R.player.pause();
+	    	$('.progress .bar').fadeOut();
 	    	$('.sidebar #content a.rdio-play').removeClass('playing');
 	    	$('.sidebar #content').find('div.player').remove();		        
 	    	return;

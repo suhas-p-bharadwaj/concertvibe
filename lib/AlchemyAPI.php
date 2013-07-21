@@ -21,10 +21,10 @@ class AlchemyAPI
 	
 	protected $types = array('positive'=>0,'negative'=>0,'neutral'=>0);
 	
-	public function StartTextSentiment($band,$lat,$lng){
+	public function StartTextSentiment($band,$city='',$lat='',$lng=''){
 		$result=array();
 		$text_blog = '';
-		$response=$this->GetTextFromTwitter($band,$lat,$lng);
+		$response=$this->GetTextFromTwitter($band,$city,$lat,$lng);
 		if(!empty($response->statuses)){
 			foreach($response->statuses as $status){
 			
@@ -39,7 +39,7 @@ class AlchemyAPI
 				
 			}
 		}
-		return array('total_score'=>$this->total_score,'sentiments'=>$this->types,'results'=>$result);
+		return array('total_score'=>$this->total_score,'types'=>$this->types,'results'=>$result);
 	}
 		
 	private function TextSentiment($text){
@@ -70,12 +70,16 @@ class AlchemyAPI
 			return '';
 	}	
 	
-	private function GetTextFromTwitter($band,$lat='',$lng=''){
+	private function GetTextFromTwitter($band,$city='',$lat='',$lng=''){
 		$twitter=new Twitter();
 		$twitter->setAccessToken();		
 		$response=$twitter->Search($band,$lat,$lng);
-		if(empty($response->statuses) && !empty($lat))
-			return $this->GetTextFromTwitter($band);
+		if(empty($response->statuses)){
+			 $response=$this->GetTextFromTwitter($band.'+'.$city);
+			 if(empty($response->statuses)){
+				 $response=$this->GetTextFromTwitter($band);
+			 }
+		}	
         return $response;
 	}
 	

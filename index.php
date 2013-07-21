@@ -6,10 +6,11 @@
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 
   <title>ConcertVibe</title>
-
-  <link rel="stylesheet" href="/css/style.css">
+  
   <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
-
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  
   <!-- Load Leaflet+MapBox CSS/JS -->
   <script src='http://api.tiles.mapbox.com/mapbox.js/v1.3.0/mapbox.js'></script>
   <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.0/mapbox.css' rel='stylesheet' />
@@ -44,6 +45,9 @@
 
         <!-- Sidebar -->
         <div id="" class="sidebar off">
+          <div class="progress progress-striped active">
+			  <div class="bar hide" style="width: 10%;"><span class="what">Loading...</span></div> 
+		  </div>
           <div id="player">
 	          
           </div>
