@@ -32,7 +32,7 @@
               <!--Search content-->
               <div id="search-box">
                 <div id="dialog">
-                  <input id="q" name="q" placeholder="Search for a band that's touring..." type="text" value="">
+                  <input id="q" name="q" placeholder="Search for a band that's touring..." type="text" value="<?=isset($_GET['q'])?$_GET['q']:''?>">
                   <button id="search-btn" class="search btn primary" name="" type="submit" value="Go">
                     <img src="images/search.svg" class="svg" alt="search" />
                   </button>
@@ -44,7 +44,9 @@
 
         <!-- Sidebar -->
         <div id="" class="sidebar off">
-         
+          <div id="player">
+	          
+          </div>
 		  <div id="content">
 		  
           </div>
@@ -52,13 +54,19 @@
           <div class="leaflet-popup-content-wrapper">
               <a href="#"><h3 class="about-header">About</h3></a>
               <p class="about-section">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, commodi, harum, atque quasi saepe provident placeat blanditiis quos minus nihil sed maiores aliquid temporibus nobis non! Iure consequuntur laudantium quam?
+              	Special thanks for <a href="http://twitter.com#musichackday">#musichackday</a> and the following APIs:
+                <ul>
+	                <li>Rdio API</li>
+	                <li>Alchemy API</li>
+	                <li>Twitter API</li>
+	                <li>Jambase API</li>
+	                <li>Setlist.fm API</li>
+                </ul>
               </p>
           </div>
         </div>
       </div>
     </div>
-
 
     <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
@@ -68,10 +76,11 @@
     <script src="/js/bootstrap.js"></script>
     <script src="/js/map.js"></script>
 
-  </body>
-
-  </div>
-
+	<?
+	if(isset($_GET['q'])){
+		echo '<script>$(document).ready(function(){clearLayer();JamBaseSearch("'.$_GET['q'].'");});</script>';
+	}		
+	?>
+	
 </body>
-
 </html>

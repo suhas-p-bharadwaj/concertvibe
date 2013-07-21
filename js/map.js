@@ -1,11 +1,15 @@
-var current = {lat: 39.7392, lng: -104.9842};
+//var current = {lat: 39.7392, lng: -104.9842};
+
+var current = {lat: 43.55, lng: 7.0166667};
 var eventList = [], mapLayers = [];
 var map = L.mapbox.map('map', 'avantassel.map-6y8nsvv5').setView([current.lat,current.lng], 5);
+var centered = false;
 var markerLayer = L.mapbox.markerLayer(mapLayers).addTo(map);
 var distance_jb = 0, distance_sl = 0, lastTrack ='';
 
 function clearLayer(layerName){
     mapLayers=[];
+    eventList=[];
     $('.poi-list').empty();
     $('.sidebar #content').empty();
     markerLayer.setGeoJSON({
@@ -18,10 +22,16 @@ function JamBaseSearch(query){
 
     $.getJSON('/tools/jambase.php',{artist:true,name:query},
         function(data) {
-            if(typeof data.Artists != 'undefined'){
-                JamBaseEvents(query,data.Artists[0].Id);
+            if(data && typeof data.Artists != 'undefined' && data.Artists.length > 0){
+            	var id=null;
+            	$.each(data.Artists,function(){
+	            	if(this.Name.toLowerCase()==query.toLowerCase())
+	            		id=this.Id;
+            	});
+            	if(!this.id)
+	                JamBaseEvents(query,data.Artists[0].Id);
             } else {
-                //sad path
+                Setlists(query);
             }
         });
 
@@ -31,7 +41,7 @@ function JamBaseEvents(query,artistId){
 	    $.getJSON('/tools/jambase.php',{events:true,artistId:artistId},
         function(data) {
 
-            if(typeof data.Events != 'undefined'){
+            if(data && typeof data.Events != 'undefined' && data.Events.length > 0){
             	$('.sidebar #content').append('<h3>Upcoming Shows</h3><div class="miles-up"></div>');
                 $.each(data.Events,function(){
                 	if(typeof this.Venue != 'undefined')
@@ -41,10 +51,10 @@ function JamBaseEvents(query,artistId){
                     type: 'FeatureCollection',
                     features: mapLayers
                 });
-                $('.miles-up').html(Math.round(distance_jb*0.621371)+' miles');
+                $('.miles-up').html(Math.round(distance_jb*0.621371)+' miles');                
                 Setlists(query);
             } else {
-                //sad path
+                Setlists(query);
             }
         },'jsonp');
 }
@@ -53,7 +63,7 @@ function Setlists(query){
 	    $.getJSON('/tools/setlistfm.php',{events:true,name:query},
         function(data) {
 
-            if(typeof data.setlists.setlist != 'undefined'){
+            if(data && typeof data.setlists.setlist != 'undefined'){
             	$('.sidebar #content').append('<h3>Past Shows</h3><div class="miles-past"></div>');
                 $.each(data.setlists.setlist,function(){
                 	if(typeof this.venue != 'undefined')
@@ -66,7 +76,7 @@ function Setlists(query){
                 $('.miles-past').html(Math.round(distance_sl*0.621371)+' miles');
                 DrawPolyLine();
             } else {
-                //sad path
+                DrawPolyLine();
             }
         },'jsonp');
 }
@@ -122,6 +132,10 @@ function addPOI_JB(poi){
 
 	eventList.push([parseFloat(poi.Venue.Latitude),parseFloat(poi.Venue.Longitude)]);
 
+	if(!centered){
+		map.setView([parseFloat(poi.Venue.Latitude),parseFloat(poi.Venue.Longitude)], 5);
+		centered=true;
+	}
     mapLayers.push({
         type: 'Feature',
         geometry: {
@@ -154,30 +168,33 @@ function addPOI_SL(poi){
             <div class="marker-title">'+poi.venue['@name']+'</div>\
           </div>';
           
-	    var sets=0;
-	    if(typeof poi.sets.set != 'undefined'){
-	    	
+	    if(poi.sets != "" && typeof poi.sets.set != 'undefined'){
 	    	html += '<div class="hide marker-description">\
               <h3>Setlist</h3>';
               
 		    $.each(poi.sets.set,function(){
 		    	html += '<ol>';
-		    	if(sets>=2)
-			    	html += '<h4>Encore</h4>';
-		    	else
-		    		html += '<h4>'+this['@name']+'</h4>';
-		    		
-			   $.each(this.song,function(){
-			   	  if(!this.cover)
- 			   	  	  html += '<li><a href="#" class="rdio-play">'+this['@name']+'</a></li>'; 	
-			   	  else
-					  html += '<li class="cover" data-artist="'+this.cover['@name']+'"><a href="#" class="rdio-play">'+this['@name']+' <b>*</b></a></li>'; 
-			   }); 
+		    	if(this['@name']){
+			    	if(this['@encore'])
+				    	html += '<h4>Encore '+this['@encore']+'</h4>';
+			    	else
+			    		html += '<h4>'+this['@name']+'</h4>';
+		    	} else {
+			    	html += '<h4>Set One</h4>';
+		    	}	
+		    	if(this.song){
+				   $.each(this.song,function(){
+				   	  if(!this.cover)
+	 			   	  	  html += '<li><a href="#" class="rdio-play">'+this['@name']+'</a></li>'; 	
+				   	  else
+						  html += '<li class="cover"><a href="#" class="rdio-play">'+this['@name']+'</a> <a href="#" class="cover" title="'+this.cover['@name']+'|'+this['@name']+'">*</a></li>'; 
+				   }); 
+			   }
 			   html += '</ol>'; 
-			   sets++;
 		    });
 			html += '</div>';
-	    }	    
+	    }	   
+
 	    return html;
 	}
 
@@ -185,6 +202,10 @@ function addPOI_SL(poi){
 		distance_sl+=getDistanceFromLatLonInKm(eventList[eventList.length-1][0],eventList[eventList.length-1][1],parseInt(poi.venue.city.coords['@lat']),parseInt(poi.venue.city.coords['@long']));
 
 	eventList.push([parseFloat(poi.venue.city.coords['@lat']),parseFloat(poi.venue.city.coords['@long'])]);
+	if(!centered){
+		map.setView([parseFloat(poi.venue.city.coords['@lat']),parseFloat(poi.venue.city.coords['@long'])], 5);
+		centered=true;
+	}
 
     mapLayers.push({
         type: 'Feature',
@@ -209,6 +230,7 @@ function DrawPolyLine(){
 		//zoom to bounds
     	map.fitBounds(polyline.getBounds());
     }
+    centered=false;
 }
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -260,6 +282,43 @@ jQuery('img.svg').each(function(){
 
 });
 
+function Rdio(self,song,artist){
+
+	R.ready(function() { 
+      R.request({
+        method: "search",
+        content: {
+          query: song+' '+artist, 
+          types: "Track"
+        },
+        success: function(response) {
+        	$('.sidebar #content').find('div.player').remove();	
+        	var result;
+          $.each(response.result.results,function(){
+	         if(this.name.toLowerCase()==song.toLowerCase())
+	           result = this; 
+          });	      
+          if(!result)
+          	result = response.result.results[0];
+          	 
+          if(lastTrack==result.key)
+          	R.player.play();
+          else
+	        R.player.play({source:result.key});
+          lastTrack=result.key;		
+          
+          $('#player').empty().css('border-bottom','1px dotted balck').append('<h3>Now Playing</h3><img src="'+result.icon+'"/><br/>Artist: '+result.artist+'<br/>Album: '+result.album+'<br/>Song: '+result.name+'<h3>&nbsp;</h3>');
+          
+          $(self).addClass('playing');          
+          $(self).parent().prepend('<div class="player"></div>');
+        },
+        error: function(response) {
+          
+        }
+      });
+    });	
+}
+
 $( document ).ready(function() {
 
     $('#search-btn').on('click',function() {
@@ -271,8 +330,7 @@ $( document ).ready(function() {
     
     $('#q').on('keydown',function(e){
 	    if(e.keyCode==13)
-		    $('#search-btn').click();
-	    
+		    $('#search-btn').click();	    
     });
     
     markerLayer.on('click',function(e,d){
@@ -283,6 +341,12 @@ $( document ).ready(function() {
 	    
 	    return false;	    
     });
+    
+    $('.sidebar #content').on('click','li.cover a.cover',function(){
+    	var tit = $(this).attr('title').split('|');
+    	if(tit.length==2)
+		    Rdio(this,tit[1],tit[0]);
+    });
     		      
     $('.sidebar #content').on('click','a.rdio-play',function(){
     	if($(this).hasClass('playing')){
@@ -291,30 +355,9 @@ $( document ).ready(function() {
 	    	$('.sidebar #content').remove('div.player');		        
 	    	return;
 		}
-		var self=this;
 			
-    	R.ready(function() { // just in case the API isn't ready yet
-              R.request({
-		        method: "search",
-		        content: {
-		          query: $('#q').val()+' '+$(self).html(), 
-		          types: "Track"
-		        },
-		        success: function(response) {
-		        $('.sidebar #content').remove('div.player');		        
-		          if(lastTrack==response.result.results[0].key)
-		          	R.player.play();
-		          else
-			        R.player.play({source:response.result.results[0].key});
-		          lastTrack=response.result.results[0].key;		
-		          $(self).addClass('playing');          
-		          $(self).parent().prepend('<div class="player"></div>');
-		        },
-		        error: function(response) {
-		          console.log(response.message);
-		        }
-		      });
-            });
+    	Rdio(this,$(this).html(),$('#q').val());
 	    return false;
     });
+    
 });

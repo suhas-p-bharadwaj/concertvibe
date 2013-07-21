@@ -1290,11 +1290,6 @@ padding:3px 15px
 	height: 100%;
 }
 
-.leaflet-right.leaflet-bottom {
-	left: 0;
-	right: auto !important;
-}
-
 .results .sidebar {
 	-webkit-transform: translate3d(0, 0, 0);
 	-moz-transform: translate3d(0, 0, 0);
@@ -1326,11 +1321,6 @@ padding:3px 15px
     -webkit-box-shadow: -1px 1px 1px rgba(12, 12, 12, 0.5);
        -moz-box-shadow: -1px 1px 1px rgba(12, 12, 12, 0.5);
             box-shadow: -1px 1px 1px rgba(12, 12, 12, 0.5);
-}
-
-.leaflet-popup-content-wrapper {
-	padding: 4px 8px !important;
-	margin-bottom: 8px
 }
 
 .twitter-face {
@@ -1409,9 +1399,12 @@ padding:3px 15px
   padding: 2px 0;
   position: relative;
   left: 10px;
+  padding-bottom: 5px;
 }
 
 .sidebar .player {
+	float:left;
+	margin-top: -10px;
 	width: 40px;
 	height:40px;
 	background-repeat:no-repeat;
