@@ -58,6 +58,7 @@
                 <ul>
 	                <li>Rdio API</li>
 	                <li>Alchemy API</li>
+	                <li>the EchoNest API</li>
 	                <li>Twitter API</li>
 	                <li>Jambase API</li>
 	                <li>Setlist.fm API</li>

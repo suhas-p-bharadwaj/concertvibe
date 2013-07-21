@@ -1,6 +1,5 @@
-//var current = {lat: 39.7392, lng: -104.9842};
-
-var current = {lat: 43.55, lng: 7.0166667};
+var current = {lat: 39.7392, lng: -104.9842};
+//var current = {lat: 43.55, lng: 7.0166667};
 var eventList = [], mapLayers = [];
 var map = L.mapbox.map('map', 'avantassel.map-6y8nsvv5').setView([current.lat,current.lng], 5);
 var centered = false;
@@ -10,6 +9,7 @@ var distance_jb = 0, distance_sl = 0, lastTrack ='';
 function clearLayer(layerName){
     mapLayers=[];
     eventList=[];
+    DrawPolyLine();
     $('.poi-list').empty();
     $('.sidebar #content').empty();
     markerLayer.setGeoJSON({
@@ -56,6 +56,22 @@ function JamBaseEvents(query,artistId){
             } else {
                 Setlists(query);
             }
+        },'jsonp');
+}
+
+function EchoNest(loc){
+	    $.getJSON('/tools/echonest.php',{location:loc},
+        function(data) {
+
+            if(data && typeof data.response != 'undefined' && data.response.artists.length > 0){
+	            var html='<ol>';
+            	$('.sidebar #content').append('<h3>Artists from '+loc+'</h3>');
+                $.each(data.response.artists,function(){
+                	html+='<li><a href="#" class="rdio-play artist-only">'+this.name+'</a></li>';
+                });
+                html+='</ol>';
+                $('.sidebar #content').append(html);
+            } 
         },'jsonp');
 }
 
@@ -225,8 +241,8 @@ function addPOI_SL(poi){
 }
 
 function DrawPolyLine(){
-	if(eventList){
-		var polyline = L.polyline(eventList,{color:'#115e67',weight:2,opacity:1,smoothFactor:10}).addTo(map);
+	var polyline = L.polyline(eventList,{color:'#115e67',weight:2,opacity:1,smoothFactor:10}).addTo(map);	
+	if(eventList.length > 0){
 		//zoom to bounds
     	map.fitBounds(polyline.getBounds());
     }
@@ -282,32 +298,54 @@ jQuery('img.svg').each(function(){
 
 });
 
+function updatePlaying(result){
+	$('#player').empty().css('border-bottom','1px dotted balck').append('<h3>Now Playing</h3><img src="'+result.icon+'"/><br/>Artist: '+result.artist+'<br/>Album: '+result.album+'<br/>Song: '+result.name+'<h3>&nbsp;</h3>');
+}
 function Rdio(self,song,artist){
-
+	
+	var ttype=(!song || song == '')?'Artist':'Track';
+	
 	R.ready(function() { 
       R.request({
         method: "search",
         content: {
           query: song+' '+artist, 
-          types: "Track"
+          types: ttype
         },
         success: function(response) {
-        	$('.sidebar #content').find('div.player').remove();	
-        	var result;
-          $.each(response.result.results,function(){
-	         if(this.name.toLowerCase()==song.toLowerCase())
-	           result = this; 
-          });	      
-          if(!result)
-          	result = response.result.results[0];
-          	 
-          if(lastTrack==result.key)
-          	R.player.play();
-          else
-	        R.player.play({source:result.key});
-          lastTrack=result.key;		
+          $('.sidebar #content').find('div.player').remove();	
+          var result=response.result.results[0];
+          var key;
           
-          $('#player').empty().css('border-bottom','1px dotted balck').append('<h3>Now Playing</h3><img src="'+result.icon+'"/><br/>Artist: '+result.artist+'<br/>Album: '+result.album+'<br/>Song: '+result.name+'<h3>&nbsp;</h3>');
+          if(ttype=='Track'){
+	          $.each(response.result.results,function(){
+		         if(this.name.toLowerCase()==song.toLowerCase())
+		           result = this; 
+	          });
+	          key=result.key 
+          } else if(result.topSongsKey){
+	          key=result.topSongsKey;
+          } else {
+	          key=result.key 
+          }
+          
+          if(lastTrack==result.key)
+			R.player.play();
+		  else
+		  	R.player.play({source:key});
+          
+          lastTrack=key;		
+          
+          if(!result.artist){
+	          setTimeout(function(){
+		      	var track = R.player.playingTrack();
+		      	if(track.attributes)
+				  	updatePlaying(track.attributes);    
+	          }, 1000);
+	          
+          } else {
+	      	$('#player').empty().css('border-bottom','1px dotted balck').append('<h3>Now Playing</h3><img src="'+result.icon+'"/><br/>Artist: '+result.artist+'<br/>Album: '+result.album+'<br/>Song: '+result.name+'<h3>&nbsp;</h3>');    
+          }
           
           $(self).addClass('playing');          
           $(self).parent().prepend('<div class="player"></div>');
@@ -339,6 +377,10 @@ $( document ).ready(function() {
 	    $(content).find('.marker-description').removeClass('hide');
 	    $('.sidebar #content').empty().append($(content));
 	    
+	    var loc = $(content).find('.marker-place').html();
+
+	    if(loc)
+		    EchoNest(loc);
 	    return false;	    
     });
     
@@ -355,8 +397,10 @@ $( document ).ready(function() {
 	    	$('.sidebar #content').remove('div.player');		        
 	    	return;
 		}
-			
-    	Rdio(this,$(this).html(),$('#q').val());
+		if($(this).hasClass('artist-only'))
+			Rdio(this,'',$(this).html());
+		else	
+	    	Rdio(this,$(this).html(),$('#q').val());
 	    return false;
     });
     
