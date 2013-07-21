@@ -11,6 +11,7 @@ padding:0
 
 body {
 	height:100%;
+	font-family: 'Open Sans', sans-serif;
 }
 
 table {
@@ -247,10 +248,9 @@ width:33%
 
 #header.header-bar {
 background: #f7f7f7;
--moz-box-shadow:0 1px 1px rgba(0,0,0,0.05);
--webkit-box-shadow:0 1px 1px rgba(0,0,0,0.05);
-box-shadow:0 1px 1px rgba(0,0,0,0.05);
-border-bottom:1px solid #000;
+-moz-box-shadow:0 1px 1px rgba(12, 12, 12, 0.5);
+-webkit-box-shadow:0 1px 1px rgba(12, 12, 12, 0.5);
+box-shadow:0 1px 1px rgba(12, 12, 12, 0.5);
 position:fixed;
 top:0;
 z-index:115;
@@ -397,10 +397,6 @@ nav#secondary-menu li a {
 display:inline-block;
 color:#fff;
 padding:12px 15px;
-}
-
-nav#secondary-menu li a:hover {
-background:#333
 }
 
 nav#secondary-menu li.with-icon img {
@@ -837,15 +833,6 @@ width:940px
 float:none;
 margin-right:auto;
 margin-left:auto
-}
-
-@font-face {
-font-family:BebasNeue;
-src:url(/css/BebasNeue-14f338cd1c45e7d67336db4f935471e3.otf)
-}
-
-body {
-font:13px/1.5 'Helvetica Neue',Arial,'Liberation Sans',FreeSans,sans-serif
 }
 
 hr {
