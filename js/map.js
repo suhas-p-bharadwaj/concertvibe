@@ -4,6 +4,7 @@ var map = L.mapbox.map('map', 'avantassel.map-6y8nsvv5').setView([current.lat,cu
 var markerLayer = L.mapbox.markerLayer(mapLayers).addTo(map);
 var eventList = [];
 var distance = 0;
+var rdio = {playback_token:'GBNR61g4_____2R2cHlzNHd5ZXg3Z2M0OXdoaDY3aHdrbnd3dy5jb25jZXJ0dmliZS5jb21utNIqY5tbhfBHUz5mcuVO'};
 
 function clearLayer(layerName){
     mapLayers=[];
@@ -119,18 +120,23 @@ function addPOI_SL(poi){
 	    var html ='<p>';
 	        html+='<br/>'+poi.venue.city['@name']+', '+poi.venue.city['@stateCode'];
 	    html += '</p>';
-	    
+	    var sets=0;
 	    if(typeof poi.sets.set != 'undefined'){
 		    $.each(poi.sets.set,function(){
-		    	html += '<ul>';
-		    	html += '<div><b>'+this['@name']+'</b></div>';
+		    	html += '<ul>';		    	
+		    	if(sets>=2)
+			    	html += '<div><b>Encore</b></div>';
+		    	else
+		    		html += '<div><b>'+this['@name']+'</b></div>';
+		    		
 			   $.each(this.song,function(){
 			   	  if(!this.cover)
- 			   	  	  html += '<li>'+this['@name']+' <a href="#" class="rdio-play"></a></li>'; 	
+ 			   	  	  html += '<li>'+this['@name']+' <a href="#" class="rdio-play" data-track="'+this['@name']+'"></a></li>'; 	
 			   	  else
-					  html += '<li>'+this['@name']+' <b>*</b> <a href="#" class="rdio-play"></a></li>'; 
+					  html += '<li class="cover" data-artist="'+this.cover['@name']+'">'+this['@name']+' <b>*</b> <a href="#" class="rdio-play" data-track="'+this['@name']+'"></a></li>'; 
 			   }); 
-			   html += '</ul>';
+			   html += '</ul>'; 
+			   sets++;
 		    });
 	    }
 	    return html;
@@ -201,7 +207,23 @@ $( document ).ready(function() {
     });
     
     $('.rdio-play').on('click',function(){
-    	$('#rdio-api').rdio().play('a997982');
+    	var track=$(this).data('track');
+    	R.ready(function() { // just in case the API isn't ready yet
+              R.request({
+		        method: "search", 
+		        content: {
+		          artist: $('#q').val(), 
+		          name: track,
+		          types: "Track"
+		        },
+		        success: function(response) {
+		          console.log(response.result.results);
+		        },
+		        error: function(response) {
+		          console.log(response.message);
+		        }
+		      });
+            });
 	    return false;
     });
 });

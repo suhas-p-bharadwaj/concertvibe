@@ -16,7 +16,7 @@
   <!--[if lte IE 8]>
     <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.0/mapbox.ie.css' rel='stylesheet' >
   <![endif]-->
-  
+  <script type="text/javascript" src="https://www.rdio.com/media/fresh/now/api-helper.js"></script>
 </head>
   <body>
     
@@ -70,7 +70,8 @@
     
     <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
-    <script src="/js/jquery.rdio.min.js" ></script>
+
+    <script src="//www.rdio.com/api/api.js?client_id=ToUS9OYepTGDQ6fRIUJn7A"></script>
         
     <script src="/js/bootstrap.js"></script>
     <script src="/js/map.js"></script>

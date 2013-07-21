@@ -1279,17 +1279,3 @@ padding:3px 15px
 #map{
 	border-right: 1px solid #000;
 }
-
-.set{weight:bold;size:13px;}
-
-.rdio-play {
-	}
-
-.rdio-play em{
-	width: 16px; 
-	height:16px; 	
-	background-repeat:no-repeat;
-	background-size:contain;
-	background-position:center;
-	background-image: url('/images/rdio-play.png') no-repeat cenmte;
-}
