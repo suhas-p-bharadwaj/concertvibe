@@ -11,7 +11,7 @@ padding:0
 
 body {
 	height:100%;
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'Droid Sans', sans-serif;
 }
 
 table {
@@ -1216,12 +1216,40 @@ padding:3px 15px
 }
 
 .sidebar {
-    margin-top: 60px;
-    right: 20px;
+    padding: 4px;
     top: 60px;
     width: 220px;
     height: 100%;
     overflow: scroll;
+    position: absolute;
+    background-color: #f7f7f7;
+    line-height: 22px;
+    right: 0;
+    bottom: 0;
+    -webkit-box-shadow: -1px 1px 1px rgba(12, 12, 12, 0.5);
+       -moz-box-shadow: -1px 1px 1px rgba(12, 12, 12, 0.5);
+            box-shadow: -1px 1px 1px rgba(12, 12, 12, 0.5);
+}
+
+.leaflet-popup-content-wrapper {
+	padding: 4px 8px !important;
+	margin-bottom: 8px
+}
+
+.face-happy path {
+	stroke: green;
+}
+
+.face-sad path {
+	stroke: red;
+}
+
+.face-neutral path {
+	stroke: gray;
+}
+
+.marker-place {
+	margin-bottom: 6px;
 }
 
 .sidebar ul {
@@ -1229,7 +1257,16 @@ padding:3px 15px
 }
 
 .sidebar h3 {
-  font: bold 12px Helvetica, Verdana, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+.sidebar h4 {
+	font-size: 16px;
+	font-weight: bold;
 }
 
 .sidebar li img {
@@ -1241,9 +1278,13 @@ padding:3px 15px
   font: 200 12px/1.5 Georgia, Times New Roman, serif;
 }
 
+.sidebar ol {
+	margin-bottom: 6px;
+}
 .sidebar li {
-  padding: 4px;
-  border-bottom: 2px solid #eee;
+  padding: 2px 0;
+  position: relative;
+  left: 10px;
 }
 
 .sidebar li:hover {
@@ -1266,5 +1307,5 @@ padding:3px 15px
 	background-repeat:no-repeat;
 	background-size:contain;
 	background-position:center;
-	background-image: url('/images/rdio-play.png') no-repeat cenmte;
+	background-image: url('/images/rdio-play.png') no-repeat center;
 }

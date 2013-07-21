@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="30px" height="30px" viewBox="-1 -1 103 103" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <title>Sad</title>
+    <description>Created with Sketch (http://www.bohemiancoding.com/sketch)</description>
+    <defs></defs>
+    <g id="Page 1" stroke="none" stroke-width="5" fill="none" fill-rule="evenodd">
+        <g id="svg2" transform="translate(-343.000000, -121.000000)">
+            <path d="M0,0 L0,340 L562,340 L562,0 L0,0 Z M0,0" id="rect3225" fill="#FFFFFF"></path>
+            <path d="M420,164 C420,157 413.709677,157 407,157" id="path3466" stroke-width="5"></path>
+            <path d="M414,142 L400,155 L421,155" id="path3456" stroke-width="5"></path>
+            <path d="M379,157 C371.727273,157 364,157 364,164" id="path3462" stroke-width="5"></path>
+            <path d="M371,142 L385,155 L364,155" id="path3458" stroke-width="5"></path>
+            <path d="M371.2,170 C364.266667,177 364.266667,191 371.2,198 C385.066667,191 398.933333,191 412.8,198 C419.733333,191 419.733333,177 412.8,170 C398.933333,177 385.066667,177 371.2,170 L371.2,170 Z M371.2,170" id="path3460" fill="#FFFFFF" stroke-width="5"></path>
+            <g id="use3292" transform="translate(340.000000, 118.000000)">
+                <path d="M102,53.0000002 C102,70.5060139 92.6606531,86.6822378 77.5000002,95.4352448 C62.3393473,104.188252 43.6606527,104.188252 28.4999998,95.4352448 C13.3393469,86.6822378 3.99999974,70.5060139 4,53.0000002 C3.99999963,35.4939863 13.3393468,19.3177623 28.4999997,10.5647553 C43.6606526,1.81174824 62.3393474,1.81174824 77.5000003,10.5647553 C92.6606532,19.3177623 102,35.4939863 102,53.0000002 L102,53.0000002 Z M102,53.0000002" id="path3270"></path>
+            </g>
+        </g>
+    </g>
+</svg>
