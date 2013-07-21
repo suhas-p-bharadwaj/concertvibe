@@ -1334,3 +1334,7 @@ h3.about-header {
 .about-section {
 	font-size: 14px;
 }
+
+.leaflet-popup-content-wrapper {
+	margin-bottom: 6px;
+}
